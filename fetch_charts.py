@@ -37,3 +37,21 @@ def load_config(path: Path) -> dict:
     if unknown:
         raise ValueError(f"未知榜单类型: {sorted(unknown)}，可选: {sorted(CHART_KEYS)}")
     return cfg
+
+
+def parse_rss(text: str) -> list[dict]:
+    """解析 iTunes RSS JSON → 按名次排序的 app 列表。"""
+    feed = json.loads(text).get("feed", {})
+    entries = feed.get("entry", [])
+    if isinstance(entries, dict):  # 仅 1 条时是 dict
+        entries = [entries]
+    apps = []
+    for rank, e in enumerate(entries, 1):
+        apps.append({
+            "track_id": str(e["id"]["attributes"]["im:id"]),
+            "name": e.get("im:name", {}).get("label", ""),
+            "artist": e.get("im:artist", {}).get("label", ""),
+            "genre_id": e.get("category", {}).get("attributes", {}).get("im:id", ""),
+            "rank": rank,
+        })
+    return apps

@@ -1,0 +1,27 @@
+{
+  "feed": {
+    "title": {"label": "Top Free Applications"},
+    "entry": [
+      {
+        "id": {
+          "label": "https://apps.apple.com/us/app/example-clean/id111111?uo=2",
+          "attributes": {"im:id": "111111"}
+        },
+        "im:name": {"label": "Example Cleaner"},
+        "im:artist": {"label": "Example Inc."},
+        "category": {"attributes": {"im:id": "6002", "term": "Utilities"}},
+        "im:price": {"label": "Get", "attributes": {"amount": "0.00"}}
+      },
+      {
+        "id": {
+          "label": "https://apps.apple.com/us/app/example-vpn/id222222?uo=2",
+          "attributes": {"im:id": "222222"}
+        },
+        "im:name": {"label": "Example VPN"},
+        "im:artist": {"label": "Example KK."},
+        "category": {"attributes": {"im:id": "6002", "term": "Utilities"}},
+        "im:price": {"label": "Get", "attributes": {"amount": "0.00"}}
+      }
+    ]
+  }
+}
