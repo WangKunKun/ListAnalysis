@@ -1,0 +1,5 @@
+{
+  "regions": ["us", "gb", "de", "fr", "jp", "kr", "hk", "tw", "sg", "th"],
+  "charts": ["free", "paid", "grossing"],
+  "top_n": 50
+}
