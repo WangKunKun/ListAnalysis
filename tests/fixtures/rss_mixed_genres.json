@@ -1,0 +1,24 @@
+{
+  "feed": {
+    "entry": [
+      {
+        "id": {"attributes": {"im:id": "100001"}},
+        "im:name": {"label": "Utility A"},
+        "im:artist": {"label": "Dev A"},
+        "category": {"attributes": {"im:id": "6002"}}
+      },
+      {
+        "id": {"attributes": {"im:id": "100002"}},
+        "im:name": {"label": "Game B"},
+        "im:artist": {"label": "Dev B"},
+        "category": {"attributes": {"im:id": "6014"}}
+      },
+      {
+        "id": {"attributes": {"im:id": "100003"}},
+        "im:name": {"label": "Utility C"},
+        "im:artist": {"label": "Dev C"},
+        "category": {"attributes": {"im:id": "6002"}}
+      }
+    ]
+  }
+}

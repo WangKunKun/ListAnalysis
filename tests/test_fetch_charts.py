@@ -63,5 +63,14 @@ class TestParseRss(unittest.TestCase):
         self.assertEqual(fetch_charts.parse_rss('{"feed": {}}'), [])
 
 
+class TestFilterUtilities(unittest.TestCase):
+    def test_filters_non_utilities_and_reranks(self):
+        text = (FIXTURES / "rss_mixed_genres.json").read_text(encoding="utf-8")
+        apps = fetch_charts.parse_rss(text)
+        kept = fetch_charts.filter_utilities(apps)
+        self.assertEqual([a["track_id"] for a in kept], ["100001", "100003"])
+        self.assertEqual([a["rank"] for a in kept], [1, 2])
+
+
 if __name__ == "__main__":
     unittest.main()

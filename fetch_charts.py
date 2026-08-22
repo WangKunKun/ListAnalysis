@@ -55,3 +55,14 @@ def parse_rss(text: str) -> list[dict]:
             "rank": rank,
         })
     return apps
+
+
+def filter_utilities(apps: list[dict]) -> list[dict]:
+    """只保留工具类并按剩余顺序重排名次。
+
+    畅销榜接口可能忽略 genre 参数，统一在客户端过滤，对两种情况都正确。
+    """
+    kept = [a for a in apps if a["genre_id"] == UTILITIES_GENRE_ID]
+    for rank, a in enumerate(kept, 1):
+        a["rank"] = rank
+    return kept
