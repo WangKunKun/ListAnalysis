@@ -102,3 +102,29 @@ def merge_apps(chart_results) -> dict:
         rec["best_chart"] = [c for c, p in CHART_PRIORITY.items() if p == key[0]][0]
         rec["best_rank"] = key[1]
     return merged
+
+
+def chunk_ids(ids: list, size: int = 200) -> list:
+    """lookup 单次最多 200 个 id。"""
+    return [ids[i:i + size] for i in range(0, len(ids), size)]
+
+
+def parse_lookup(text: str) -> dict:
+    """解析 lookup 响应 → {track_id: 详情}。评分缺失容忍为 None。"""
+    data = json.loads(text)
+    out = {}
+    for r in data.get("results", []):
+        if "trackId" not in r:
+            continue
+        out[str(r["trackId"])] = {
+            "name": r.get("trackName", ""),
+            "description": r.get("description", ""),
+            "developer": r.get("sellerName", ""),
+            "genres": r.get("genres", []),
+            "price": r.get("formattedPrice", ""),
+            "rating": r.get("averageUserRating"),
+            "rating_count": r.get("userRatingCount"),
+            "release_date": r.get("currentVersionReleaseDate", ""),
+            "track_view_url": r.get("trackViewUrl", ""),
+        }
+    return out

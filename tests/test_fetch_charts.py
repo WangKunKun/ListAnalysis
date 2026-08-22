@@ -112,5 +112,25 @@ class TestMergeApps(unittest.TestCase):
         self.assertEqual(merged["1"]["best_rank"], 2)
 
 
+class TestLookup(unittest.TestCase):
+    def test_chunk_ids(self):
+        ids = [str(i) for i in range(450)]
+        chunks = fetch_charts.chunk_ids(ids, size=200)
+        self.assertEqual([len(c) for c in chunks], [200, 200, 50])
+
+    def test_parse_lookup_fields(self):
+        text = (FIXTURES / "lookup.json").read_text(encoding="utf-8")
+        details = fetch_charts.parse_lookup(text)
+        d = details["111111"]
+        self.assertEqual(d["name"], "Example Cleaner")
+        self.assertEqual(d["developer"], "Example Inc.")
+        self.assertEqual(d["price"], "Free")
+        self.assertEqual(d["rating"], 4.7)
+        self.assertEqual(d["rating_count"], 128000)
+        self.assertEqual(d["release_date"], "2026-08-01T00:00:00Z")
+        # 评分缺失时保持 None/0，不抛异常
+        self.assertIsNone(details["222222"]["rating"])
+
+
 if __name__ == "__main__":
     unittest.main()

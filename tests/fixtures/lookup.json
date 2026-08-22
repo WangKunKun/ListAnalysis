@@ -1,0 +1,28 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "trackId": 111111,
+      "trackName": "Example Cleaner",
+      "sellerName": "Example Inc.",
+      "description": "Clean your phone. Free up storage.",
+      "genres": ["Utilities", "Productivity"],
+      "formattedPrice": "Free",
+      "averageUserRating": 4.7,
+      "userRatingCount": 128000,
+      "currentVersionReleaseDate": "2026-08-01T00:00:00Z",
+      "trackViewUrl": "https://apps.apple.com/us/app/id111111"
+    },
+    {
+      "trackId": 222222,
+      "trackName": "Example VPN Pro",
+      "sellerName": "Example KK.",
+      "description": "Fast and secure VPN.",
+      "genres": ["Utilities"],
+      "formattedPrice": "$4.99",
+      "averageUserRating": null,
+      "userRatingCount": 0,
+      "trackViewUrl": "https://apps.apple.com/us/app/id222222"
+    }
+  ]
+}
