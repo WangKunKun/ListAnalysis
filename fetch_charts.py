@@ -5,6 +5,9 @@
 """
 
 import json
+import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 UTILITIES_GENRE_ID = "6002"
@@ -128,3 +131,18 @@ def parse_lookup(text: str) -> dict:
             "track_view_url": r.get("trackViewUrl", ""),
         }
     return out
+
+
+def http_get(url, opener=urllib.request.urlopen, sleep=time.sleep):
+    """GET 并返回响应文本；重试 RETRY_LIMIT 次，全失败返回 None。"""
+    last_exc = None
+    for attempt in range(1 + RETRY_LIMIT):
+        try:
+            with opener(url, timeout=30) as resp:
+                return resp.read().decode("utf-8")
+        except (urllib.error.URLError, OSError) as exc:
+            last_exc = exc
+            if attempt < RETRY_LIMIT:
+                sleep(RETRY_DELAY)
+    print(f"  请求失败（已重试 {RETRY_LIMIT} 次）: {url} ({last_exc})", flush=True)
+    return None

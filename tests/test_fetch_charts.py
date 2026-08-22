@@ -1,7 +1,9 @@
 import json
 import unittest
+import urllib.error
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest import mock
 
 import fetch_charts
 
@@ -130,6 +132,37 @@ class TestLookup(unittest.TestCase):
         self.assertEqual(d["release_date"], "2026-08-01T00:00:00Z")
         # 评分缺失时保持 None/0，不抛异常
         self.assertIsNone(details["222222"]["rating"])
+
+
+class TestHttpGet(unittest.TestCase):
+    def _resp(self, body=b"{}"):
+        m = mock.MagicMock()
+        m.__enter__.return_value.read.return_value = body
+        return m
+
+    def test_success_first_try_no_retry_sleep(self):
+        opener = mock.MagicMock(return_value=self._resp(b"ok"))
+        sleep = mock.MagicMock()
+        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        self.assertEqual(result, "ok")
+        opener.assert_called_once()
+        sleep.assert_not_called()
+
+    def test_retries_then_succeeds(self):
+        fail = urllib.error.URLError("boom")
+        opener = mock.MagicMock(side_effect=[fail, fail, self._resp(b"fine")])
+        sleep = mock.MagicMock()
+        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        self.assertEqual(result, "fine")
+        self.assertEqual(opener.call_count, 3)   # 1 + RETRY_LIMIT
+        self.assertEqual(sleep.call_count, 2)
+        sleep.assert_called_with(fetch_charts.RETRY_DELAY)
+
+    def test_all_failures_return_none(self):
+        opener = mock.MagicMock(side_effect=urllib.error.URLError("down"))
+        sleep = mock.MagicMock()
+        self.assertIsNone(fetch_charts.http_get("http://x", opener=opener, sleep=sleep))
+        self.assertEqual(opener.call_count, 3)
 
 
 if __name__ == "__main__":
