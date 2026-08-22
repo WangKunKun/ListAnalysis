@@ -1,3 +1,4 @@
+import http.client
 import json
 import unittest
 import urllib.error
@@ -163,6 +164,19 @@ class TestHttpGet(unittest.TestCase):
         sleep = mock.MagicMock()
         self.assertIsNone(fetch_charts.http_get("http://x", opener=opener, sleep=sleep))
         self.assertEqual(opener.call_count, 3)
+
+    def test_http_exception_during_read_is_retried(self):
+        # 首次 read() 抛 IncompleteRead（截断响应），第二次成功
+        good = mock.MagicMock()
+        good.__enter__.return_value.read.return_value = b"recovered"
+        bad = mock.MagicMock()
+        bad.__enter__.return_value.read.side_effect = http.client.IncompleteRead(b"par")
+        opener = mock.MagicMock(side_effect=[bad, good])
+        sleep = mock.MagicMock()
+        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        self.assertEqual(result, "recovered")
+        self.assertEqual(opener.call_count, 2)
+        sleep.assert_called_once()
 
 
 if __name__ == "__main__":

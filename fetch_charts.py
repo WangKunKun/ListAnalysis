@@ -4,6 +4,7 @@
 仅使用 Python 标准库。数据落盘 data/{日期}/，元信息见 meta.json。
 """
 
+import http.client
 import json
 import time
 import urllib.error
@@ -140,7 +141,7 @@ def http_get(url, opener=urllib.request.urlopen, sleep=time.sleep):
         try:
             with opener(url, timeout=30) as resp:
                 return resp.read().decode("utf-8")
-        except (urllib.error.URLError, OSError) as exc:
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as exc:
             last_exc = exc
             if attempt < RETRY_LIMIT:
                 sleep(RETRY_DELAY)
