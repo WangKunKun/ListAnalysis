@@ -66,3 +66,39 @@ def filter_utilities(apps: list[dict]) -> list[dict]:
     for rank, a in enumerate(kept, 1):
         a["rank"] = rank
     return kept
+
+
+def best_rank_key(ranks: dict) -> "tuple | None":
+    """ranks={cc:{chart:rank}} → (榜单优先级, 名次) 取最小者。"""
+    best = None
+    for by_chart in ranks.values():
+        for chart, rank in by_chart.items():
+            key = (CHART_PRIORITY[chart], rank)
+            if best is None or key < best:
+                best = key
+    return best
+
+
+def merge_apps(chart_results) -> dict:
+    """chart_results: [(cc, chart, [app, ...])] → {track_id: record}。
+
+    regions 按首次上榜顺序记录；第一个区域用于后续 lookup 的本地化。
+    """
+    merged = {}
+    for cc, chart, apps in chart_results:
+        for a in apps:
+            rec = merged.setdefault(a["track_id"], {
+                "track_id": a["track_id"],
+                "name": a["name"],
+                "artist": a["artist"],
+                "ranks": {},
+                "regions": [],
+            })
+            rec["ranks"].setdefault(cc, {})[chart] = a["rank"]
+            if cc not in rec["regions"]:
+                rec["regions"].append(cc)
+    for rec in merged.values():
+        key = best_rank_key(rec["ranks"])
+        rec["best_chart"] = [c for c, p in CHART_PRIORITY.items() if p == key[0]][0]
+        rec["best_rank"] = key[1]
+    return merged
