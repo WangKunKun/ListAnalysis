@@ -179,5 +179,68 @@ class TestHttpGet(unittest.TestCase):
         sleep.assert_called_once()
 
 
+class TestRun(unittest.TestCase):
+    RSS = (FIXTURES / "rss_utilities.json").read_text(encoding="utf-8")
+    LOOKUP = (FIXTURES / "lookup.json").read_text(encoding="utf-8")
+
+    def _run(self, td, charts=("free",), regions=("us",), refresh=False):
+        cfg = {"regions": list(regions), "charts": list(charts), "top_n": 5}
+
+        def serve(url, timeout=30):  # lookup 请求返回 LOOKUP，其余返回 RSS
+            body = self.LOOKUP if "/lookup?" in url else self.RSS
+            return mock.MagicMock(
+                __enter__=lambda s: mock.MagicMock(read=lambda: body.encode()),
+                __exit__=lambda *a: False)
+
+        opener = mock.MagicMock(side_effect=serve)
+        return fetch_charts.run(cfg, Path(td), refresh=refresh,
+                                sleep=mock.MagicMock(), opener=opener), opener
+
+    def test_writes_data_files(self):
+        with TemporaryDirectory() as td:
+            meta, _ = self._run(td)
+            base = Path(td)
+            self.assertTrue((base / "raw" / "us_free.json").exists())
+            apps = json.loads((base / "apps.json").read_text(encoding="utf-8"))
+            self.assertIsInstance(apps, list)
+            self.assertEqual(apps[0]["track_id"], "111111")
+            self.assertIn("description", apps[0]["details"])  # lookup 详情已合并
+            meta_disk = json.loads((base / "meta.json").read_text(encoding="utf-8"))
+            self.assertEqual(meta_disk["app_count"], len(apps))
+            self.assertEqual(meta_disk["skipped"], [])
+
+    def test_skips_when_data_exists_unless_refresh(self):
+        with TemporaryDirectory() as td:
+            self._run(td)
+            meta, opener = self._run(td)                    # 第二次：应复用
+            self.assertIn("reused", meta)
+            self.assertEqual(opener.call_count, 0)
+
+    def test_failed_chart_recorded_in_skipped(self):
+        with TemporaryDirectory() as td:
+            cfg = {"regions": ["us"], "charts": ["free"], "top_n": 5}
+            opener = mock.MagicMock(side_effect=urllib.error.URLError("net down"))
+            meta = fetch_charts.run(cfg, Path(td), refresh=False,
+                                    sleep=mock.MagicMock(), opener=opener)
+            self.assertEqual(meta["skipped"], ["us_free"])
+            self.assertTrue(meta.get("all_failed"))
+
+    def test_main_exit_codes(self):
+        cfg_path = Path("config.json")  # 项目根存在，仅用于参数解析
+        with mock.patch.object(fetch_charts, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(fetch_charts, "run",
+                               return_value={"all_failed": True}) as m_run:
+            rc = fetch_charts.main(["--config", str(cfg_path), "--date", "2099-01-01"])
+            self.assertEqual(rc, 1)
+            self.assertEqual(m_run.call_args.kwargs.get("refresh"), False)
+        with mock.patch.object(fetch_charts, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(fetch_charts, "run", return_value={}):
+            rc = fetch_charts.main(["--config", str(cfg_path), "--date", "2099-01-01",
+                                    "--refresh"])
+            self.assertEqual(rc, 0)
+
+
 if __name__ == "__main__":
     unittest.main()
