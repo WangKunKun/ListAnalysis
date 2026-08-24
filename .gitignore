@@ -7,3 +7,4 @@ data/*
 logs/*
 !logs/.gitkeep
 node_modules/
+.obsidian/
