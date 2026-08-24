@@ -4,25 +4,29 @@
 仅使用 Python 标准库。数据落盘 data/{日期}/，元信息见 meta.json。
 """
 
-import http.client
 import json
 import time
-import urllib.error
 import urllib.request
 from pathlib import Path
 
-UTILITIES_GENRE_ID = "6002"
-CHART_KEYS = {
-    "free": "topfreeapplications",
-    "paid": "toppaidapplications",
-    "grossing": "topgrossingapplications",
-}
+from fetch.adapters import ios as _ios
+
+# 兼容 re-export：旧调用方（fetch_charts.parse_rss 等）不受影响
+UTILITIES_GENRE_ID = _ios.UTILITIES_GENRE_ID
+CHART_KEYS = _ios.CHART_KEYS
+REQUEST_INTERVAL = _ios.REQUEST_INTERVAL
+RETRY_LIMIT = _ios.RETRY_LIMIT
+RETRY_DELAY = _ios.RETRY_DELAY
+RSS_URL = _ios.RSS_URL
+LOOKUP_URL = _ios.LOOKUP_URL
+parse_rss = _ios.parse_rss
+filter_utilities = _ios.filter_utilities
+chunk_ids = _ios.chunk_ids
+parse_lookup = _ios.parse_lookup
+http_get = _ios.http_get
+
 # 最佳排名优先级：数字越小越优先（spec §4.2）
 CHART_PRIORITY = {"free": 0, "paid": 1, "grossing": 2}
-
-REQUEST_INTERVAL = 3.0
-RETRY_LIMIT = 2
-RETRY_DELAY = 5.0
 
 DEFAULT_CONFIG = {
     "regions": ["us", "gb", "de", "fr", "jp", "kr", "hk", "tw", "sg", "th"],
@@ -41,35 +45,6 @@ def load_config(path: Path) -> dict:
     if unknown:
         raise ValueError(f"未知榜单类型: {sorted(unknown)}，可选: {sorted(CHART_KEYS)}")
     return cfg
-
-
-def parse_rss(text: str) -> list[dict]:
-    """解析 iTunes RSS JSON → 按名次排序的 app 列表。"""
-    feed = json.loads(text).get("feed", {})
-    entries = feed.get("entry", [])
-    if isinstance(entries, dict):  # 仅 1 条时是 dict
-        entries = [entries]
-    apps = []
-    for rank, e in enumerate(entries, 1):
-        apps.append({
-            "track_id": str(e["id"]["attributes"]["im:id"]),
-            "name": e.get("im:name", {}).get("label", ""),
-            "artist": e.get("im:artist", {}).get("label", ""),
-            "genre_id": e.get("category", {}).get("attributes", {}).get("im:id", ""),
-            "rank": rank,
-        })
-    return apps
-
-
-def filter_utilities(apps: list[dict]) -> list[dict]:
-    """只保留工具类并按剩余顺序重排名次。
-
-    畅销榜接口可能忽略 genre 参数，统一在客户端过滤，对两种情况都正确。
-    """
-    kept = [a for a in apps if a["genre_id"] == UTILITIES_GENRE_ID]
-    for rank, a in enumerate(kept, 1):
-        a["rank"] = rank
-    return kept
 
 
 def best_rank_key(ranks: dict) -> "tuple | None":
@@ -106,51 +81,6 @@ def merge_apps(chart_results) -> dict:
         rec["best_chart"] = [c for c, p in CHART_PRIORITY.items() if p == key[0]][0]
         rec["best_rank"] = key[1]
     return merged
-
-
-def chunk_ids(ids: list, size: int = 200) -> list:
-    """lookup 单次最多 200 个 id。"""
-    return [ids[i:i + size] for i in range(0, len(ids), size)]
-
-
-def parse_lookup(text: str) -> dict:
-    """解析 lookup 响应 → {track_id: 详情}。评分缺失容忍为 None。"""
-    data = json.loads(text)
-    out = {}
-    for r in data.get("results", []):
-        if "trackId" not in r:
-            continue
-        out[str(r["trackId"])] = {
-            "name": r.get("trackName", ""),
-            "description": r.get("description", ""),
-            "developer": r.get("sellerName", ""),
-            "genres": r.get("genres", []),
-            "price": r.get("formattedPrice", ""),
-            "rating": r.get("averageUserRating"),
-            "rating_count": r.get("userRatingCount"),
-            "release_date": r.get("currentVersionReleaseDate", ""),
-            "track_view_url": r.get("trackViewUrl", ""),
-        }
-    return out
-
-
-def http_get(url, opener=urllib.request.urlopen, sleep=time.sleep):
-    """GET 并返回响应文本；重试 RETRY_LIMIT 次，全失败返回 None。"""
-    last_exc = None
-    for attempt in range(1 + RETRY_LIMIT):
-        try:
-            with opener(url, timeout=30) as resp:
-                return resp.read().decode("utf-8")
-        except (urllib.error.URLError, OSError, http.client.HTTPException) as exc:
-            last_exc = exc
-            if attempt < RETRY_LIMIT:
-                sleep(RETRY_DELAY)
-    print(f"  请求失败（已重试 {RETRY_LIMIT} 次）: {url} ({last_exc})", flush=True)
-    return None
-
-
-RSS_URL = "https://itunes.apple.com/{cc}/rss/{chart_key}/limit={limit}/genre={gid}/json"
-LOOKUP_URL = "https://itunes.apple.com/lookup?id={ids}&country={cc}"
 
 
 def run(config, data_dir, refresh=False, sleep=time.sleep,

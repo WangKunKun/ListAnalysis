@@ -7,6 +7,7 @@ from tempfile import TemporaryDirectory
 from unittest import mock
 
 import fetch_charts
+from fetch.adapters import ios
 
 
 class TestLoadConfig(unittest.TestCase):
@@ -38,7 +39,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 class TestParseRss(unittest.TestCase):
     def test_parses_entries_with_rank(self):
         text = (FIXTURES / "rss_utilities.json").read_text(encoding="utf-8")
-        apps = fetch_charts.parse_rss(text)
+        apps = ios.parse_rss(text)
         self.assertEqual(len(apps), 2)
         self.assertEqual(apps[0], {
             "track_id": "111111",
@@ -58,19 +59,19 @@ class TestParseRss(unittest.TestCase):
             "im:artist": {"label": "Solo Dev"},
             "category": {"attributes": {"im:id": "6002"}},
         }}})
-        apps = fetch_charts.parse_rss(text)
+        apps = ios.parse_rss(text)
         self.assertEqual(len(apps), 1)
         self.assertEqual(apps[0]["rank"], 1)
 
     def test_empty_feed(self):
-        self.assertEqual(fetch_charts.parse_rss('{"feed": {}}'), [])
+        self.assertEqual(ios.parse_rss('{"feed": {}}'), [])
 
 
 class TestFilterUtilities(unittest.TestCase):
     def test_filters_non_utilities_and_reranks(self):
         text = (FIXTURES / "rss_mixed_genres.json").read_text(encoding="utf-8")
-        apps = fetch_charts.parse_rss(text)
-        kept = fetch_charts.filter_utilities(apps)
+        apps = ios.parse_rss(text)
+        kept = ios.filter_utilities(apps)
         self.assertEqual([a["track_id"] for a in kept], ["100001", "100003"])
         self.assertEqual([a["rank"] for a in kept], [1, 2])
 
@@ -118,12 +119,12 @@ class TestMergeApps(unittest.TestCase):
 class TestLookup(unittest.TestCase):
     def test_chunk_ids(self):
         ids = [str(i) for i in range(450)]
-        chunks = fetch_charts.chunk_ids(ids, size=200)
+        chunks = ios.chunk_ids(ids, size=200)
         self.assertEqual([len(c) for c in chunks], [200, 200, 50])
 
     def test_parse_lookup_fields(self):
         text = (FIXTURES / "lookup.json").read_text(encoding="utf-8")
-        details = fetch_charts.parse_lookup(text)
+        details = ios.parse_lookup(text)
         d = details["111111"]
         self.assertEqual(d["name"], "Example Cleaner")
         self.assertEqual(d["developer"], "Example Inc.")
@@ -144,7 +145,7 @@ class TestHttpGet(unittest.TestCase):
     def test_success_first_try_no_retry_sleep(self):
         opener = mock.MagicMock(return_value=self._resp(b"ok"))
         sleep = mock.MagicMock()
-        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        result = ios.http_get("http://x", opener=opener, sleep=sleep)
         self.assertEqual(result, "ok")
         opener.assert_called_once()
         sleep.assert_not_called()
@@ -153,16 +154,16 @@ class TestHttpGet(unittest.TestCase):
         fail = urllib.error.URLError("boom")
         opener = mock.MagicMock(side_effect=[fail, fail, self._resp(b"fine")])
         sleep = mock.MagicMock()
-        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        result = ios.http_get("http://x", opener=opener, sleep=sleep)
         self.assertEqual(result, "fine")
         self.assertEqual(opener.call_count, 3)   # 1 + RETRY_LIMIT
         self.assertEqual(sleep.call_count, 2)
-        sleep.assert_called_with(fetch_charts.RETRY_DELAY)
+        sleep.assert_called_with(ios.RETRY_DELAY)
 
     def test_all_failures_return_none(self):
         opener = mock.MagicMock(side_effect=urllib.error.URLError("down"))
         sleep = mock.MagicMock()
-        self.assertIsNone(fetch_charts.http_get("http://x", opener=opener, sleep=sleep))
+        self.assertIsNone(ios.http_get("http://x", opener=opener, sleep=sleep))
         self.assertEqual(opener.call_count, 3)
 
     def test_http_exception_during_read_is_retried(self):
@@ -173,7 +174,7 @@ class TestHttpGet(unittest.TestCase):
         bad.__enter__.return_value.read.side_effect = http.client.IncompleteRead(b"par")
         opener = mock.MagicMock(side_effect=[bad, good])
         sleep = mock.MagicMock()
-        result = fetch_charts.http_get("http://x", opener=opener, sleep=sleep)
+        result = ios.http_get("http://x", opener=opener, sleep=sleep)
         self.assertEqual(result, "recovered")
         self.assertEqual(opener.call_count, 2)
         sleep.assert_called_once()
