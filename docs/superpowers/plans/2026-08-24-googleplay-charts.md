@@ -1048,12 +1048,43 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ---
 
+### Task 4B: Play 适配器改 Node 桥接(2026-08-24 修订)
+
+> **修订原因**:冒烟发现 Python 版 google-play-scraper 1.2.7 **没有 top() 榜单功能**(只有 app/search/reviews;调研阶段的搜索结果把 Node 原版功能误记到了 Python 版)。经用户确认改用 **Node 桥接**:榜单与详情统一走 Node 版 google-play-scraper@^10.1.3(已真实验证:`list()` 支持 TOOLS 分类 × TOP_FREE/TOP_PAID/**GROSSING**(注意:畅销榜常量是 `GROSSING`,非 TOP_GROSSING)× country × num;字段名与 Python 版 app() 一致,normalize_top/normalize_app 契约映射无需改动)。
+> **网络前置条件**:play.google.com 需代理访问(DNS 污染)。用户选择"手动开代理跑"——脚本/launchd 不配代理,冒烟与定时任务运行时须保证代理已开启。
+
+**Files:**
+- Create: `scripts/play_bridge.mjs`、`package.json`
+- Modify: `fetch/adapters/play.py`(fetch_chart/fetch_details/check_dependency 改走桥)、`tests/test_adapter_play.py`(注入点从 top_fn/app_fn 改为 bridge_fn)
+- Delete: `requirements.txt`(Python 版库不再使用)
+
+**play_bridge.mjs 设计:**读 stdin JSON 指令,stdout 输出 JSON 结果:
+- `{"cmd": "list", "collection": "...", "category": "TOOLS", "num": N, "country": "cc", "lang": "en"}` → `[{appId,title,developer,score,...}]`(gplay.list 原样)
+- `{"cmd": "apps", "ids": ["com.x",...], "country": "cc", "lang": "en"}` → `{"com.x": {...app详情...}, ...}`(Node 内部逐个 gplay.app,单 app 失败置 null 容忍)
+- 错误:stderr 一行 + exit 1(非零);`node_modules` 缺失依赖时给明确提示
+
+**play.py 改造要点:**
+- `CHARTS = {"free": "TOP_FREE", "paid": "TOP_PAID", "grossing": "GROSSING"}`
+- `check_dependency()`:校验 `node` 可用且 `node_modules/google-play-scraper` 存在(或 `node -e "require('google-play-scraper')"` 成功);失败打印"请先运行: npm install"+ SystemExit(2)
+- `_run_bridge(payload, timeout=120) -> dict|list|None`:subprocess 跑 `node scripts/play_bridge.mjs`,stdin 传 JSON;失败返回 None(重试逻辑在 fetch_chart 层)
+- `fetch_chart`:构造 list 指令 → _run_bridge(重试 1+RETRY_LIMIT,间隔 RETRY_DELAY)→ normalize_top;CHARTS[chart] 在循环外取(KeyError 不进重试)
+- `fetch_details`:一次 _run_bridge(apps 指令,全部 ids)→ 过滤 null → normalize_app
+- 测试:fetch_chart/fetch_details 注入 `bridge_fn`(fake 返回 fixture JSON 的**原始 Node 字段**),保留全部既有 normalize/容错断言语义;test_check_dependency_missing_exits_2 改 mock node 缺失场景
+
+**验收:** 全量测试绿(Python 侧全部 mock node,无需装 npm 依赖);`python3 -m fetch.charts --platform play ...` 在未 npm install 时给友好提示退出码 2。
+
+**提交:** `feat: Play 适配器改 Node 桥接(榜单与详情统一走 google-play-scraper@10)`
+
+---
+
 ### Task 5: Play 真实 API 冒烟验证(手动,不进自动测试)
 
 **Files:**
 - 无新文件;产出 `data/smoke/play/`(验证后删除)
 
-- [ ] **Step 1: 安装依赖并冒烟**
+- [ ] **Step 0: 前置条件(用户已确认)**:代理软件已开启(play.google.com 可达);`npm install` 已在项目根执行
+
+- [ ] **Step 1: 冒烟**
 
 ```bash
 cd "/Users/hoymiles/Desktop/AI编程项目/Python/ListAnalysis" && \
