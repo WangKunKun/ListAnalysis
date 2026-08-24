@@ -1,0 +1,22 @@
+{
+  "appId": "com.example.cleaner",
+  "title": "Example Cleaner",
+  "description": "Clean your phone. Free up storage.",
+  "summary": "Cleaner & booster",
+  "installs": "100,000,000+",
+  "minInstalls": 100000000,
+  "score": 4.6,
+  "ratings": 128000,
+  "price": 0,
+  "free": true,
+  "currency": "USD",
+  "offersIAP": true,
+  "inAppProductPrice": "$0.99 - $99.99 per item",
+  "developer": "Example Inc.",
+  "genre": "Tools",
+  "genreId": "TOOLS",
+  "categories": [{"name": "Performance", "id": null}],
+  "released": "Aug 1, 2019",
+  "updated": 1755000000,
+  "url": "https://play.google.com/store/apps/details?id=com.example.cleaner"
+}

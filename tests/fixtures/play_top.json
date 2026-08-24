@@ -1,0 +1,26 @@
+[
+  {
+    "appId": "com.example.cleaner",
+    "title": "Example Cleaner",
+    "developer": "Example Inc.",
+    "score": 4.6,
+    "ratings": 128000,
+    "price": 0,
+    "free": true,
+    "currency": "USD",
+    "genre": "Tools",
+    "genreId": "TOOLS"
+  },
+  {
+    "appId": "com.example.vpn",
+    "title": "Example VPN",
+    "developer": "Example KK.",
+    "score": 4.2,
+    "ratings": 98000,
+    "price": 4.99,
+    "free": false,
+    "currency": "USD",
+    "genre": "Tools",
+    "genreId": "TOOLS"
+  }
+]
