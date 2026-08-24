@@ -1283,6 +1283,11 @@ verify)
   launchctl list | grep -q "$LABEL" && echo "✓ ${LABEL} 已加载" || { echo "✗ ${LABEL} 未加载"; exit 1; }
   CLAUDE_BIN="$(zsh -lc 'command -v claude' || true)"
   [ -n "$CLAUDE_BIN" ] && echo "✓ claude 可用: $CLAUDE_BIN" || { echo "✗ 登录 shell 找不到 claude"; exit 1; }
+  if [ "$PLATFORM" = "play" ]; then
+    NODE_BIN="$(zsh -lc 'command -v node' || true)"
+    [ -n "$NODE_BIN" ] && echo "✓ node 可用: $NODE_BIN" || { echo "✗ 登录 shell 找不到 node(Play 需要)"; exit 1; }
+    [ -d "${PROJECT_DIR}/node_modules/google-play-scraper" ] && echo "✓ npm 依赖已装" || { echo "✗ 缺 npm 依赖:请在项目根 npm install"; exit 1; }
+  fi
   ;;
 *)
   echo "用法: $0 install|uninstall|verify [ios|play]"; exit 1
