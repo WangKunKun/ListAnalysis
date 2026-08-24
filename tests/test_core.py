@@ -71,7 +71,7 @@ class FakeAdapter:
         self.details = details or {}
         self.fail = set(fail)
         self.chart_calls = []
-        self.detail_ids = None
+        self.detail_ids = []
 
     def fetch_chart(self, cc, chart, top_n, sleep=None):
         self.chart_calls.append((cc, chart, top_n))
@@ -149,6 +149,15 @@ class TestRun(unittest.TestCase):
             self.assertEqual(meta["skipped"], ["us_free"])
             self.assertTrue(meta.get("all_failed"))
 
+    def test_detail_top_n_zero_means_no_details(self):
+        with TemporaryDirectory() as td:
+            adapter = FakeAdapter(_fake_apps(), _fake_details())
+            cfg = {"regions": ["us"], "charts": ["free"], "top_n": 5,
+                   "detail_top_n": 0}
+            meta = core.run(adapter, cfg, Path(td), sleep=mock.MagicMock())
+            self.assertEqual(adapter.detail_ids, [])   # 0 = 不拉详情
+            self.assertEqual(meta["detail_top_n"], 0)
+
 
 class TestMain(unittest.TestCase):
     def test_exit_code_all_failed_and_platform_dir(self):
@@ -191,6 +200,48 @@ class TestMain(unittest.TestCase):
              mock.patch.object(core, "run", side_effect=fake_run):
             core.main(["--date", "2099-01-01", "--platform", "play"])
             self.assertEqual(cfg_holder["2099-01-01/play"]["detail_top_n"], 150)
+
+    def test_platform_all_continues_when_play_fails(self):
+        # play 适配器缺失/初始化失败时,all 模式 iOS 仍执行且 rc=1
+        ran = []
+
+        def boom(name):
+            def _cls():
+                if name == "play":
+                    raise ModuleNotFoundError("no module play")
+                a = FakeAdapter()
+                a.name = name
+                return a
+            return _cls
+
+        with mock.patch.object(core, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(core, "get_adapter",
+                               side_effect=lambda n: boom(n)), \
+             mock.patch.object(core, "run",
+                               side_effect=lambda a, c, d, **k: ran.append(a.name) or {}):
+            rc = core.main(["--date", "2099-01-01", "--platform", "all"])
+            self.assertEqual(rc, 1)
+            self.assertEqual(ran, ["ios"])   # play 失败被跳过,iOS 照跑
+
+    def test_platform_subconfig_invalid_charts_rejected(self):
+        import os
+        path = self._bad_cfg()
+        self.addCleanup(os.unlink, path)
+        with mock.patch.object(core, "get_adapter", return_value=FakeAdapter), \
+             mock.patch.object(core, "run", return_value={}) as m_run:
+            rc = core.main(["--date", "2099-01-01", "--platform", "play", "--config",
+                            path])
+            self.assertEqual(rc, 1)
+            m_run.assert_not_called()        # 配置错误不进入抓取
+
+    @staticmethod
+    def _bad_cfg():
+        from tempfile import NamedTemporaryFile
+        f = NamedTemporaryFile("w", suffix=".json", delete=False)
+        f.write('{"charts": ["free"], "play": {"charts": ["bogus"]}}')
+        f.close()
+        return f.name
 
 
 if __name__ == "__main__":

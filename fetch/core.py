@@ -6,6 +6,11 @@ from pathlib import Path
 
 from fetch.adapters import get_adapter
 
+__all__ = [
+    "VALID_CHARTS", "CHART_PRIORITY", "DEFAULT_CONFIG",
+    "load_config", "best_rank_key", "merge_apps", "run", "main", "get_adapter",
+]
+
 # 榜单抽象名（两平台共用）；平台 API 值的映射在各自适配器内
 VALID_CHARTS = {"free", "paid", "grossing"}
 # 最佳排名优先级：数字越小越优先
@@ -18,18 +23,24 @@ DEFAULT_CONFIG = {
 }
 
 
+def _validate_charts(cfg: dict) -> None:
+    """校验 cfg["charts"] 只含已知榜单，否则抛 ValueError。"""
+    unknown = set(cfg["charts"]) - VALID_CHARTS
+    if unknown:
+        raise ValueError(f"未知榜单类型: {sorted(unknown)}，可选: {sorted(VALID_CHARTS)}")
+
+
 def load_config(path: Path) -> dict:
     """读取配置，缺省字段用 DEFAULT_CONFIG 补齐；charts 含未知值时报错。
 
-    顶层为公共默认；"ios"/"play" 键为平台覆盖子字典，原样保留由调用方合并。
+    顶层为公共默认；"ios"/"play" 键为平台覆盖子字典，原样保留由调用方合并
+    （平台子字典中的 charts 由调用方合并后自行校验）。
     """
     cfg = dict(DEFAULT_CONFIG)
     if path.exists():
         with open(path, encoding="utf-8") as f:
             cfg.update(json.load(f))
-    unknown = set(cfg["charts"]) - VALID_CHARTS
-    if unknown:
-        raise ValueError(f"未知榜单类型: {sorted(unknown)}，可选: {sorted(VALID_CHARTS)}")
+    _validate_charts(cfg)
     return cfg
 
 
@@ -70,6 +81,9 @@ def merge_apps(chart_results) -> dict:
 
 
 def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
+    """抓取并落盘。注意：raw/ 目录存的是解析后的统一 apps 结构（便于 diff
+    与跨平台一致），并非原始 HTTP 响应文本。
+    """
     data_dir.mkdir(parents=True, exist_ok=True)
     apps_path = data_dir / "apps.json"
     meta_path = data_dir / "meta.json"
@@ -101,7 +115,7 @@ def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
 
     # 详情补全：detail_top_n 截断（None=不限）；按首次上榜区域分组请求
     detail_top_n = config.get("detail_top_n")
-    target = ordered[:detail_top_n] if detail_top_n else ordered
+    target = ordered[:detail_top_n] if detail_top_n is not None else ordered
     by_region = {}
     for rec in target:
         by_region.setdefault(rec["regions"][0], []).append(rec["track_id"])
@@ -150,7 +164,20 @@ def main(argv=None) -> int:
         cfg.update(base.get(p, {}))
         if p == "play":
             cfg.setdefault("detail_top_n", 150)  # spec §6 默认，config 可覆盖
-        adapter = get_adapter(p)()
+        try:
+            _validate_charts(cfg)
+        except ValueError as exc:
+            print(f"平台 {p} 配置错误: {exc}", flush=True)
+            rc = 1
+            continue
+        try:
+            adapter = get_adapter(p)()
+        except SystemExit:
+            raise  # 依赖缺失等明确退出场景：原样传播退出码
+        except Exception as exc:
+            print(f"平台 {p} 初始化失败: {exc}", flush=True)
+            rc = 1
+            continue
         meta = run(adapter, cfg, Path("data") / args.date / p, refresh=args.refresh)
         if meta.get("all_failed"):
             rc = 1
