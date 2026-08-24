@@ -89,3 +89,31 @@ def http_get(url, opener=urllib.request.urlopen, sleep=time.sleep):
                 sleep(RETRY_DELAY)
     print(f"  请求失败（已重试 {RETRY_LIMIT} 次）: {url} ({last_exc})", flush=True)
     return None
+
+
+class IosAdapter:
+    """iTunes RSS + lookup 适配器。"""
+    name = "ios"
+    request_interval = REQUEST_INTERVAL
+
+    def __init__(self, opener=urllib.request.urlopen):
+        self._opener = opener
+
+    def fetch_chart(self, cc, chart, top_n, sleep=time.sleep):
+        url = RSS_URL.format(cc=cc, chart_key=CHART_KEYS[chart],
+                             limit=top_n, gid=UTILITIES_GENRE_ID)
+        text = http_get(url, opener=self._opener, sleep=sleep)
+        if text is None:
+            return None
+        return filter_utilities(parse_rss(text))
+
+    def fetch_details(self, ids, cc, sleep=time.sleep):
+        out = {}
+        for chunk in chunk_ids(ids):
+            sleep(REQUEST_INTERVAL)
+            text = http_get(LOOKUP_URL.format(ids=",".join(chunk), cc=cc),
+                            opener=self._opener, sleep=sleep)
+            if text is None:
+                continue  # 详情缺失不致命，分析层降级
+            out.update(parse_lookup(text))
+        return out

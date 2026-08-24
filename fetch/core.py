@@ -1,7 +1,10 @@
 """平台无关的榜单抓取编排：配置、去重合并、落盘、CLI。"""
 
 import json
+import time
 from pathlib import Path
+
+from fetch.adapters import get_adapter
 
 # 榜单抽象名（两平台共用）；平台 API 值的映射在各自适配器内
 VALID_CHARTS = {"free", "paid", "grossing"}
@@ -64,3 +67,91 @@ def merge_apps(chart_results) -> dict:
         rec["best_chart"] = [c for c, p in CHART_PRIORITY.items() if p == key[0]][0]
         rec["best_rank"] = key[1]
     return merged
+
+
+def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
+    data_dir.mkdir(parents=True, exist_ok=True)
+    apps_path = data_dir / "apps.json"
+    meta_path = data_dir / "meta.json"
+    if apps_path.exists() and not refresh:
+        if meta_path.exists():
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            meta["reused"] = True
+            return meta
+        return {"reused": True}
+
+    raw_dir = data_dir / "raw"
+    raw_dir.mkdir(exist_ok=True)
+
+    chart_results, skipped = [], []
+    for cc in config["regions"]:
+        for chart in config["charts"]:
+            sleep(adapter.request_interval)
+            apps = adapter.fetch_chart(cc, chart, config["top_n"], sleep=sleep)
+            if apps is None:
+                skipped.append(f"{cc}_{chart}")
+                continue
+            (raw_dir / f"{cc}_{chart}.json").write_text(
+                json.dumps(apps, ensure_ascii=False), encoding="utf-8")
+            chart_results.append((cc, chart, apps))
+
+    merged = merge_apps(chart_results)
+    ordered = sorted(merged.values(),
+                     key=lambda r: (CHART_PRIORITY[r["best_chart"]], r["best_rank"]))
+
+    # 详情补全：detail_top_n 截断（None=不限）；按首次上榜区域分组请求
+    detail_top_n = config.get("detail_top_n")
+    target = ordered[:detail_top_n] if detail_top_n else ordered
+    by_region = {}
+    for rec in target:
+        by_region.setdefault(rec["regions"][0], []).append(rec["track_id"])
+    for cc, ids in by_region.items():
+        for tid, detail in adapter.fetch_details(ids, cc, sleep=sleep).items():
+            if tid in merged:
+                merged[tid]["details"] = detail
+
+    apps_path.write_text(json.dumps(ordered, ensure_ascii=False, indent=2),
+                         encoding="utf-8")
+
+    meta = {
+        "platform": adapter.name,
+        "date": data_dir.name,
+        "regions": config["regions"],
+        "charts": config["charts"],
+        "top_n": config["top_n"],
+        "detail_top_n": detail_top_n,
+        "app_count": len(ordered),
+        "region_count": config["regions"],
+        "skipped": skipped,
+        "all_failed": len(chart_results) == 0,
+    }
+    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2),
+                         encoding="utf-8")
+    print(f"完成[{adapter.name}]: {len(ordered)} 个独立 app（跳过 {len(skipped)} 个榜单）",
+          flush=True)
+    return meta
+
+
+def main(argv=None) -> int:
+    import argparse
+    from datetime import date as _date
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", default="config.json")
+    parser.add_argument("--date", default=_date.today().strftime("%Y-%m-%d"))
+    parser.add_argument("--refresh", action="store_true")
+    parser.add_argument("--platform", default="ios", choices=["ios", "play", "all"])
+    args = parser.parse_args(argv)
+
+    base = load_config(Path(args.config))
+    platforms = ["ios", "play"] if args.platform == "all" else [args.platform]
+    rc = 0
+    for p in platforms:
+        cfg = {k: v for k, v in base.items() if k not in ("ios", "play")}
+        cfg.update(base.get(p, {}))
+        if p == "play":
+            cfg.setdefault("detail_top_n", 150)  # spec §6 默认，config 可覆盖
+        adapter = get_adapter(p)()
+        meta = run(adapter, cfg, Path("data") / args.date / p, refresh=args.refresh)
+        if meta.get("all_failed"):
+            rc = 1
+    return rc

@@ -1,6 +1,8 @@
+import json
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest import mock
 
 from fetch import core
 
@@ -57,6 +59,138 @@ class TestMergeApps(unittest.TestCase):
         merged = core.merge_apps([("us", "grossing", [a1]), ("jp", "paid", [a2])])
         self.assertEqual(merged["1"]["best_chart"], "paid")
         self.assertEqual(merged["1"]["best_rank"], 2)
+
+
+class FakeAdapter:
+    """测试用适配器：单榜单返回固定 apps，详情查表。支持无参构造（main 用）。"""
+    name = "fake"
+    request_interval = 0
+
+    def __init__(self, chart_apps=None, details=None, fail=()):
+        self.chart_apps = chart_apps or []
+        self.details = details or {}
+        self.fail = set(fail)
+        self.chart_calls = []
+        self.detail_ids = None
+
+    def fetch_chart(self, cc, chart, top_n, sleep=None):
+        self.chart_calls.append((cc, chart, top_n))
+        if f"{cc}_{chart}" in self.fail:
+            return None
+        return [dict(a) for a in self.chart_apps]
+
+    def fetch_details(self, ids, cc, sleep=None):
+        self.detail_ids = list(ids)
+        return {tid: dict(self.details[tid]) for tid in ids if tid in self.details}
+
+
+def _fake_apps():
+    return [
+        {"track_id": "1", "name": "Cleaner", "artist": "Dev A",
+         "genre_id": "6002", "rank": 1},
+        {"track_id": "2", "name": "VPN", "artist": "Dev B",
+         "genre_id": "6002", "rank": 2},
+    ]
+
+
+def _fake_details():
+    return {
+        "1": {"name": "Cleaner", "developer": "Dev A", "description": "clean it",
+              "rating": 4.5, "rating_count": 100, "price": "Free",
+              "genres": ["Utilities"], "release_date": "2026-01-01",
+              "track_view_url": "https://example.com/1"},
+        "2": {"name": "VPN", "developer": "Dev B", "description": "fast vpn",
+              "rating": 4.0, "rating_count": 50, "price": "Free",
+              "genres": ["Utilities"], "release_date": "2026-02-02",
+              "track_view_url": "https://example.com/2"},
+    }
+
+
+class TestRun(unittest.TestCase):
+    def _run(self, td, refresh=False, fail=(), detail_top_n=None):
+        adapter = FakeAdapter(_fake_apps(), _fake_details(), fail=fail)
+        cfg = {"regions": ["us"], "charts": ["free"], "top_n": 5,
+               "detail_top_n": detail_top_n}
+        return core.run(adapter, cfg, Path(td), refresh=refresh,
+                        sleep=mock.MagicMock()), adapter
+
+    def test_writes_data_files_with_platform_layout(self):
+        with TemporaryDirectory() as td:
+            base = Path(td)           # 直接把 td 当 data/{date}/{platform}
+            meta, _ = self._run(td)
+            self.assertTrue((base / "raw" / "us_free.json").exists())
+            apps = json.loads((base / "apps.json").read_text(encoding="utf-8"))
+            self.assertEqual(apps[0]["track_id"], "1")
+            self.assertIn("description", apps[0]["details"])
+            meta_disk = json.loads((base / "meta.json").read_text(encoding="utf-8"))
+            self.assertEqual(meta_disk["platform"], "fake")
+            self.assertEqual(meta_disk["app_count"], len(apps))
+            self.assertEqual(meta_disk["skipped"], [])
+            self.assertIn("detail_top_n", meta_disk)
+
+    def test_detail_top_n_limits_detail_fetch(self):
+        with TemporaryDirectory() as td:
+            _, adapter = self._run(td, detail_top_n=1)
+            self.assertEqual(adapter.detail_ids, ["1"])  # 只有最佳排名第 1
+
+    def test_skips_when_data_exists_unless_refresh(self):
+        with TemporaryDirectory() as td:
+            # 同一 adapter 复跑：第二次应复用落盘数据，不再抓取
+            adapter = FakeAdapter(_fake_apps(), _fake_details())
+            cfg = {"regions": ["us"], "charts": ["free"], "top_n": 5}
+            core.run(adapter, cfg, Path(td), sleep=mock.MagicMock())
+            meta = core.run(adapter, cfg, Path(td), sleep=mock.MagicMock())
+            self.assertIn("reused", meta)
+            self.assertEqual(len(adapter.chart_calls), 1)
+
+    def test_failed_chart_recorded_in_skipped(self):
+        with TemporaryDirectory() as td:
+            meta, _ = self._run(td, fail=("us_free",))
+            self.assertEqual(meta["skipped"], ["us_free"])
+            self.assertTrue(meta.get("all_failed"))
+
+
+class TestMain(unittest.TestCase):
+    def test_exit_code_all_failed_and_platform_dir(self):
+        with mock.patch.object(core, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(core, "get_adapter", return_value=FakeAdapter), \
+             mock.patch.object(core, "run",
+                               return_value={"all_failed": True}) as m_run:
+            rc = core.main(["--date", "2099-01-01"])
+            self.assertEqual(rc, 1)
+            self.assertEqual(m_run.call_args.args[2], Path("data/2099-01-01/ios"))
+            self.assertEqual(m_run.call_args.kwargs.get("refresh"), False)
+
+    def test_platform_arg_selects_dir_and_adapter(self):
+        calls = []
+
+        class RecordingAdapter(FakeAdapter):
+            def __init__(self, *a, **k):
+                super().__init__(*a, **k)
+                calls.append(self.name)
+
+        with mock.patch.object(core, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(core, "get_adapter", return_value=RecordingAdapter), \
+             mock.patch.object(core, "run", return_value={}):
+            rc = core.main(["--date", "2099-01-01", "--platform", "all"])
+            self.assertEqual(rc, 0)
+            self.assertEqual(len(calls), 2)  # ios + play 各跑一遍
+
+    def test_play_defaults_detail_top_n(self):
+        cfg_holder = {}
+
+        def fake_run(adapter, cfg, data_dir, refresh=False, sleep=None):
+            cfg_holder[data_dir.parent.name + "/" + data_dir.name] = dict(cfg)
+            return {}
+
+        with mock.patch.object(core, "load_config",
+                               return_value={"regions": [], "charts": [], "top_n": 5}), \
+             mock.patch.object(core, "get_adapter", return_value=FakeAdapter), \
+             mock.patch.object(core, "run", side_effect=fake_run):
+            core.main(["--date", "2099-01-01", "--platform", "play"])
+            self.assertEqual(cfg_holder["2099-01-01/play"]["detail_top_n"], 150)
 
 
 if __name__ == "__main__":
