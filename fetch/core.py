@@ -142,7 +142,8 @@ def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
 
     meta = {
         "platform": adapter.name,
-        "date": data_dir.name,
+        # data/{日期}/{平台}/ 布局下,日期在父目录名(冒烟等直传目录时退化为目录名)
+        "date": data_dir.parent.name,
         "regions": config["regions"],
         "charts": config["charts"],
         "top_n": config["top_n"],

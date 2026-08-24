@@ -87,7 +87,8 @@ def normalize_app(d: dict) -> dict:
         "min_installs": d.get("minInstalls"),
         "offers_iap": d.get("offersIAP"),
         "iap_price": d.get("inAppProductPrice"),
-        "contains_ads": d.get("containsAds"),
+        # Node 版字段名是 adSupported,Python 版是 containsAds,两者兼容
+        "contains_ads": d.get("containsAds", d.get("adSupported")),
         "updated": d.get("updated"),
     }
 

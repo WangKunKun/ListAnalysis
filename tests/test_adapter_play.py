@@ -41,6 +41,11 @@ class TestNormalize(unittest.TestCase):
         self.assertTrue(d["offers_iap"])
         self.assertEqual(d["iap_price"], "$0.99 - $99.99 per item")
 
+    def test_normalize_app_adsupported_compat(self):
+        # Node 版字段名 adSupported,Python 版 containsAds,两者兼容
+        self.assertTrue(play.normalize_app({"adSupported": True})["contains_ads"])
+        self.assertTrue(play.normalize_app({"containsAds": True})["contains_ads"])
+
     def test_normalize_app_paid_price_format(self):
         d = play.normalize_app({"free": False, "price": 4.99, "currency": "USD"})
         self.assertEqual(d["price"], "USD 4.99")

@@ -143,6 +143,16 @@ class TestRun(unittest.TestCase):
             self.assertIn("reused", meta)
             self.assertEqual(len(adapter.chart_calls), 1)
 
+    def test_meta_date_uses_parent_dir_name(self):
+        # data/{日期}/{平台}/ 布局:meta.date 取父目录(日期)
+        with TemporaryDirectory() as td:
+            base = Path(td) / "2026-08-24" / "play"
+            adapter = FakeAdapter(_fake_apps(), _fake_details())
+            cfg = {"regions": ["us"], "charts": ["free"], "top_n": 5}
+            core.run(adapter, cfg, base, sleep=mock.MagicMock())
+            meta_disk = json.loads((base / "meta.json").read_text(encoding="utf-8"))
+            self.assertEqual(meta_disk["date"], "2026-08-24")
+
     def test_failed_chart_recorded_in_skipped(self):
         with TemporaryDirectory() as td:
             meta, _ = self._run(td, fail=("us_free",))
