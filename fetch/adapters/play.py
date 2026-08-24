@@ -15,6 +15,8 @@ CHARTS = {"free": "TOP_FREE", "paid": "TOP_PAID", "grossing": "GROSSING"}
 CATEGORY_TOOLS = "TOOLS"
 
 BRIDGE_TIMEOUT = 60  # 无代理（黑洞网络）时快速放弃，避免长时间挂起
+DETAIL_BATCH = 30  # 桥内节流约 300ms/个，30×~0.8s≈24s < 60s 超时余量充足
+DETAIL_INTERVAL = 1.0  # 详情批间隔
 
 
 def check_dependency():
@@ -113,6 +115,9 @@ class PlayAdapter:
                 if raw is None:
                     raise RuntimeError("bridge returned None")
                 return normalize_top(raw)
+            except subprocess.TimeoutExpired:
+                print(f"  桥接超时（放弃该榜，不重试）: play {cc} {chart}", flush=True)
+                return None
             except KeyError:
                 raise
             except Exception as exc:
@@ -124,15 +129,29 @@ class PlayAdapter:
         return None
 
     def fetch_details(self, ids, cc, sleep=time.sleep, bridge_fn=None):
+        """批量拉详情；按 DETAIL_BATCH 分批，超时批丢弃不炸流程。
+
+        sleep 参数为兼容 core 统一签名保留（Play 的节流在桥内，此参数忽略）。
+        """
         bridge = bridge_fn or _run_bridge
-        raw = bridge({"cmd": "apps", "ids": list(ids), "country": cc, "lang": "en"},
-                     runner=self._runner)
-        if raw is None:
-            return {}
         out = {}
-        for app_id, d in raw.items():
-            if d is None:
-                print(f"  详情失败（跳过）: {app_id}", flush=True)
+        id_list = list(ids)
+        for start in range(0, len(id_list), DETAIL_BATCH):
+            batch = id_list[start:start + DETAIL_BATCH]
+            if start > 0:
+                time.sleep(DETAIL_INTERVAL)
+            try:
+                raw = bridge({"cmd": "apps", "ids": batch, "country": cc,
+                              "lang": "en"}, runner=self._runner)
+            except subprocess.TimeoutExpired:
+                print(f"  详情批超时（跳过该批 {len(batch)} 个）", flush=True)
                 continue
-            out[app_id] = normalize_app(d)
+            if raw is None:
+                print(f"  详情批失败（跳过该批 {len(batch)} 个）", flush=True)
+                continue
+            for app_id, d in raw.items():
+                if d is None:
+                    print(f"  详情失败（跳过）: {app_id}", flush=True)
+                    continue
+                out[app_id] = normalize_app(d)
         return out

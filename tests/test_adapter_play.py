@@ -93,6 +93,33 @@ class TestPlayAdapter(unittest.TestCase):
         self.assertEqual(bridge.calls[0]["cmd"], "apps")
         self.assertEqual(bridge.calls[0]["ids"], ["com.example.cleaner", "com.bad"])
 
+    def test_fetch_chart_timeout_no_retry(self):
+        import subprocess
+        def slow_bridge(payload, runner=None):
+            raise subprocess.TimeoutExpired(cmd="node", timeout=60)
+        a = play.PlayAdapter(runner=mock.MagicMock())
+        apps = a.fetch_chart("us", "free", 50, sleep=mock.MagicMock(),
+                             bridge_fn=slow_bridge)
+        self.assertIsNone(apps)
+
+    def test_fetch_details_batches_and_timeout_tolerant(self):
+        import subprocess
+        raw = json.loads((FIXTURES / "play_app.json").read_text(encoding="utf-8"))
+        calls = []
+
+        def bridge(payload, runner=None):
+            calls.append(payload)
+            if len(calls) == 1:
+                raise subprocess.TimeoutExpired(cmd="node", timeout=60)  # 首批超时
+            return {"com.a": raw, "com.b": None}                          # 次批部分成功
+
+        a = play.PlayAdapter(runner=mock.MagicMock())
+        ids = [f"com.i{i}" for i in range(29)] + ["com.a", "com.b"]  # 31 → 2 批
+        out = a.fetch_details(ids, "us", sleep=mock.MagicMock(), bridge_fn=bridge)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls[0]["ids"]), 30)
+        self.assertEqual(list(out), ["com.a"])  # 首批超时丢弃,次批 null 容忍
+
     def test_check_dependency_missing_node_exits_2(self):
         with mock.patch.object(play, "shutil", create=True) as m_shutil, \
              mock.patch.object(play, "subprocess", create=True):
