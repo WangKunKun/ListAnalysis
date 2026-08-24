@@ -14,6 +14,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 CHARTS = {"free": "TOP_FREE", "paid": "TOP_PAID", "grossing": "GROSSING"}
 CATEGORY_TOOLS = "TOOLS"
 
+BRIDGE_TIMEOUT = 60  # 无代理（黑洞网络）时快速放弃，避免长时间挂起
+
 
 def check_dependency():
     """node 或 npm 依赖缺失时以退出码 2 终止。"""
@@ -29,7 +31,7 @@ def check_dependency():
         raise SystemExit(2)
 
 
-def _run_bridge(payload, timeout=300, runner=None):
+def _run_bridge(payload, timeout=BRIDGE_TIMEOUT, runner=None):
     """调 scripts/play_bridge.mjs，返回解析后的 JSON；失败返回 None。"""
     run = runner or subprocess.run
     proc = run(["node", str(PROJECT_ROOT / "scripts" / "play_bridge.mjs")],

@@ -158,6 +158,37 @@ class TestRun(unittest.TestCase):
             self.assertEqual(adapter.detail_ids, [])   # 0 = 不拉详情
             self.assertEqual(meta["detail_top_n"], 0)
 
+    def test_consecutive_failures_abort_remaining(self):
+        with TemporaryDirectory() as td:
+            # 全部榜单失败的 FakeAdapter，regions 2×charts 3：第 5 个失败后剩余全部进 skipped
+            adapter = FakeAdapter(_fake_apps(), _fake_details(),
+                                  fail=("us_free", "us_paid", "us_grossing",
+                                        "gb_free", "gb_paid", "gb_grossing"))
+            cfg = {"regions": ["us", "gb"], "charts": ["free", "paid", "grossing"],
+                   "top_n": 5}
+            meta = core.run(adapter, cfg, Path(td), sleep=mock.MagicMock())
+            self.assertEqual(meta["skipped"],
+                             ["us_free", "us_paid", "us_grossing",
+                              "gb_free", "gb_paid", "gb_grossing"])
+            self.assertTrue(meta["all_failed"])
+            # 第 5 个失败后放弃，第 6 个榜单不再实际请求
+            self.assertEqual(len(adapter.chart_calls), 5)
+
+    def test_success_resets_consecutive_counter(self):
+        with TemporaryDirectory() as td:
+            # 4 连败后成功，计数清零，不触发放弃；共 6 榜，前 4 失败第 5 成功第 6 失败
+            adapter = FakeAdapter(_fake_apps(), _fake_details(),
+                                  fail=("us_free", "us_paid", "us_grossing", "gb_free",
+                                        "gb_grossing"))
+            cfg = {"regions": ["us", "gb"], "charts": ["free", "paid", "grossing"],
+                   "top_n": 5}
+            meta = core.run(adapter, cfg, Path(td), sleep=mock.MagicMock())
+            self.assertEqual(meta["skipped"],
+                             ["us_free", "us_paid", "us_grossing", "gb_free",
+                              "gb_grossing"])
+            self.assertEqual(meta["app_count"], 2)  # gb_paid 成功产出
+            self.assertFalse(meta["all_failed"])
+
 
 class TestMain(unittest.TestCase):
     def test_exit_code_all_failed_and_platform_dir(self):

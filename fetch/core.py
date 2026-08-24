@@ -22,6 +22,8 @@ DEFAULT_CONFIG = {
     "top_n": 50,
 }
 
+ABORT_AFTER_FAILS = 5  # 连续失败达到此数即放弃剩余榜单（如断网/代理未开）
+
 
 def _validate_charts(cfg: dict) -> None:
     """校验 cfg["charts"] 只含已知榜单，否则抛 ValueError。"""
@@ -98,13 +100,24 @@ def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
     raw_dir.mkdir(exist_ok=True)
 
     chart_results, skipped = [], []
+    consecutive_fails = 0
+    aborted = False
     for cc in config["regions"]:
         for chart in config["charts"]:
+            if aborted:
+                skipped.append(f"{cc}_{chart}")
+                continue
             sleep(adapter.request_interval)
             apps = adapter.fetch_chart(cc, chart, config["top_n"], sleep=sleep)
             if apps is None:
                 skipped.append(f"{cc}_{chart}")
+                consecutive_fails += 1
+                if consecutive_fails >= ABORT_AFTER_FAILS:
+                    print(f"连续 {ABORT_AFTER_FAILS} 个榜单失败，跳过剩余榜单"
+                          "（检查网络/代理）", flush=True)
+                    aborted = True
                 continue
+            consecutive_fails = 0
             (raw_dir / f"{cc}_{chart}.json").write_text(
                 json.dumps(apps, ensure_ascii=False), encoding="utf-8")
             chart_results.append((cc, chart, apps))
