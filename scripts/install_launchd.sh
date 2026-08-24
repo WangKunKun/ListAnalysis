@@ -6,7 +6,7 @@ set -euo pipefail
 LABEL="com.appcharts.scan"
 PLIST="$HOME/Library/LaunchAgents/${LABEL}.plist"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-mkdir -p "${PROJECT_DIR}/logs}"
+mkdir -p "${PROJECT_DIR}/logs"
 
 case "${1:-}" in
 install)
