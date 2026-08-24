@@ -20,7 +20,7 @@ install)
   <array>
     <string>/bin/zsh</string>
     <string>-lc</string>
-    <string>cd '${PROJECT_DIR}' && claude -p '/app-scan standard' >> '${PROJECT_DIR}/logs/scan-\$(date +%F).log' 2>&1</string>
+    <string>cd '${PROJECT_DIR}' && claude -p '/app-scan standard' >> "${PROJECT_DIR}/logs/scan-\$(date +%F).log" 2>&1</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
