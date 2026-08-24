@@ -1,0 +1,8 @@
+{
+  "name": "listanalysis",
+  "private": true,
+  "description": "App Store / Google Play 榜单扫描（Play 数据源桥接依赖）",
+  "dependencies": {
+    "google-play-scraper": "^10.1.3"
+  }
+}
