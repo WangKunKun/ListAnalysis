@@ -36,13 +36,17 @@ standard(默认,头部 10 个抓评论);--refresh(强制重抓)。
    - 过滤后样本 < 5 → 告知用户样本过少、给出建议关键词,停止。
    - 头部排序:上榜优先(榜单位置),未上榜按评分量/下载量。standard 模式
      取头部 10 个抓评论:
-     - ios:WebFetch 抓
+     - ios:优先 WebFetch 抓
        `https://itunes.apple.com/us/rss/customerreviews/id={track_id}/sortBy=mostRecent/page=1/json`
-       提炼好评/差评主题;抓不到标注"信息有限"。
-     - play:Bash 写临时脚本 `/tmp/play_reviews.mjs`(内容如下)执行后删除,
-       cwd 为项目根;需代理时 export PLAY_PROXY=...:
+       提炼好评/差评主题;WebFetch 被域安全拦截时改用
+       `curl -s <同 URL>` 抓 JSON 自行提炼;两者都失败标注"信息有限"。
+     - play:Bash 写临时脚本 `/tmp/play_reviews.mjs`(内容如下,一字不差)执行后
+       删除,cwd 必须为项目根;需代理时命令前加
+       `PLAY_PROXY=http://127.0.0.1:7890`:
 
        ```js
+       import { createRequire } from "node:module";
+       const require = createRequire(process.cwd() + "/");
        const gplay = require('google-play-scraper').default;
        const proxy = process.env.PLAY_PROXY || process.env.HTTPS_PROXY || '';
        const ro = proxy ? { agent: { https: new (require('hpagent').HttpsProxyAgent)({ proxy }) } } : {};
@@ -51,7 +55,9 @@ standard(默认,头部 10 个抓评论);--refresh(强制重抓)。
          .catch(e => { console.error(e.message); process.exit(1); });
        ```
 
-       运行 `node /tmp/play_reviews.mjs {track_id}`,据输出提炼好评/差评主题。
+       注意:脚本在 /tmp 但依赖项目的 node_modules,故须用 `createRequire(process.cwd() + "/")`
+       解析(.mjs 里裸用 require 会 ReferenceError);运行 `node /tmp/play_reviews.mjs {track_id}`,
+       据输出提炼好评/差评主题。
      - 评论抓取失败的 app 标"信息有限",不中断。
 5. **写报告**到 `reports/{日期}-品类分析-{slug}.md`(结构见下),完整样本表
    直接写进报告第 7 节。最后向用户输出 3-5 句执行摘要(竞争格局一句话 +
