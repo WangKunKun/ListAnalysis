@@ -25,6 +25,18 @@
 
 Play 首次使用：`npm install`（需 node；运行时需代理可访问 play.google.com）。
 
+## 品类分析
+
+    # 任意品类双平台竞品与痛点分析（AI 编排，双平台一份报告）
+    /cat-scan PDF 扫描
+    /cat-scan 个性化二维码生成 light
+    # 只抓品类样本数据（不分析）
+    python3 -m fetch.category --terms "pdf scanner,ocr scan" --slug pdf-scanner --platform all
+
+Play 需代理时：`export PLAY_PROXY=http://127.0.0.1:7890`（桥自动识别，
+HTTPS_PROXY 亦可；iOS 直连）。数据落 `data/{日期}/cat-{slug}/`，
+报告落 `reports/{日期}-品类分析-{slug}.md`。
+
 ## 定时任务
 
     scripts/install_launchd.sh install ios     # 每周一 09:30
@@ -40,6 +52,7 @@ Play 首次使用：`npm install`（需 node；运行时需代理可访问 play.
 ## 目录
 
 - `data/{日期}/{平台}/`：原始榜单（raw/）、合并清单（apps.json）、运行元信息（meta.json）
+- `data/{日期}/cat-{slug}/`：品类搜索样本（{ios|play}.json 含 source_terms/details、meta.json 记录关键词与统计）
 - `reports/`：中文分析报告（`{日期}-工具榜分析-{平台}.md`）
 - `logs/`：定时任务日志
 - `fetch/`：抓取框架（core 编排 + adapters 平台适配器）
