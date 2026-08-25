@@ -1,0 +1,25 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "trackId": 1199564834,
+      "trackName": "Adobe Scan: PDF & OCR Scanner",
+      "sellerName": "Adobe Inc.",
+      "description": "Adobe Scan is an intelligent document scanner.",
+      "genres": ["Business", "Productivity"],
+      "formattedPrice": "Free",
+      "averageUserRating": 4.87,
+      "userRatingCount": 1581517,
+      "currentVersionReleaseDate": "2026-08-12T19:10:18Z",
+      "trackViewUrl": "https://apps.apple.com/us/app/adobe-scan/id1199564834?uo=4"
+    },
+    {
+      "trackId": 595628518,
+      "trackName": "Scanner App: PDF Document Scan",
+      "sellerName": "Example Dev",
+      "formattedPrice": "Free",
+      "averageUserRating": null,
+      "userRatingCount": 0
+    }
+  ]
+}

@@ -114,5 +114,39 @@ class TestHttpGet(unittest.TestCase):
         sleep.assert_called_once()
 
 
+class TestSearchApps(unittest.TestCase):
+    def _opener(self, body):
+        m = mock.MagicMock()
+        m.__enter__.return_value.read.return_value = body
+        return mock.MagicMock(return_value=m)
+
+    def test_search_apps_parses_and_builds_url(self):
+        text = (FIXTURES / "ios_search.json").read_text(encoding="utf-8").encode()
+        opener = self._opener(text)
+        a = fetch_charts.IosAdapter(opener=opener)
+        apps = a.search_apps("pdf scanner", "us", 100, sleep=mock.MagicMock())
+        self.assertEqual(len(apps), 2)
+        self.assertEqual(apps[0]["track_id"], "1199564834")
+        self.assertEqual(apps[0]["name"], "Adobe Scan: PDF & OCR Scanner")
+        self.assertEqual(apps[0]["artist"], "Adobe Inc.")
+        self.assertEqual(apps[0]["details"]["rating_count"], 1581517)
+        self.assertIsNone(apps[1]["details"]["rating"])  # 缺评分容忍为 None
+        url = opener.call_args.args[0]
+        self.assertIn("term=pdf%20scanner", url)
+        self.assertIn("country=us", url)
+        self.assertIn("limit=100", url)
+        self.assertIn("entity=software", url)
+
+    def test_search_apps_empty_results_returns_empty_list(self):
+        opener = self._opener(b'{"resultCount": 0, "results": []}')
+        a = fetch_charts.IosAdapter(opener=opener)
+        self.assertEqual(a.search_apps("x", "us", 10, sleep=mock.MagicMock()), [])
+
+    def test_search_apps_http_fail_returns_none(self):
+        opener = mock.MagicMock(side_effect=urllib.error.URLError("down"))
+        a = fetch_charts.IosAdapter(opener=opener)
+        self.assertIsNone(a.search_apps("x", "us", 10, sleep=mock.MagicMock()))
+
+
 if __name__ == "__main__":
     unittest.main()

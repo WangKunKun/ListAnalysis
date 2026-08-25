@@ -5,6 +5,7 @@ import json
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import quote
 
 UTILITIES_GENRE_ID = "6002"
 CHART_KEYS = {
@@ -19,6 +20,7 @@ RETRY_DELAY = 5.0
 
 RSS_URL = "https://itunes.apple.com/{cc}/rss/{chart_key}/limit={limit}/genre={gid}/json"
 LOOKUP_URL = "https://itunes.apple.com/lookup?id={ids}&country={cc}"
+SEARCH_URL = "https://itunes.apple.com/search?term={term}&country={cc}&entity=software&limit={limit}"
 
 
 def parse_rss(text: str) -> list[dict]:
@@ -117,3 +119,14 @@ class IosAdapter:
                 continue  # 详情缺失不致命，分析层降级
             out.update(parse_lookup(text))
         return out
+
+    def search_apps(self, term, cc, limit, sleep=time.sleep):
+        """关键词搜索品类样本。Search API 响应与 lookup 同构，
+        复用 parse_lookup 解析，详情一次到位（无需再调 lookup）。"""
+        url = SEARCH_URL.format(term=quote(term), cc=cc, limit=limit)
+        text = http_get(url, opener=self._opener, sleep=sleep)
+        if text is None:
+            return None
+        details = parse_lookup(text)
+        return [{"track_id": tid, "name": d["name"], "artist": d["developer"],
+                 "details": d} for tid, d in details.items()]
