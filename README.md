@@ -30,6 +30,8 @@ Play 首次使用：`npm install`（需 node；运行时需代理可访问 play.
     # 任意品类双平台竞品与痛点分析（AI 编排，双平台一份报告）
     /cat-scan PDF 扫描
     /cat-scan 个性化二维码生成 light
+    # 从品类报告生成自包含 PRD（交给任意 AI 编码工具依次实现）
+    /cat-prd pdf-scanner cross buyout
     # 只抓品类样本数据（不分析）
     python3 -m fetch.category --terms "pdf scanner,ocr scan" --slug pdf-scanner --platform all
 
