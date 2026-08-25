@@ -129,6 +129,14 @@ class TestRunCategory(unittest.TestCase):
             stats = category.run_category(adapter, ["a", "b"], "us", 100, Path(td))
             self.assertTrue(stats["all_failed"])
 
+    def test_all_failed_writes_no_platform_file(self):
+        # 全部失败不落盘:避免空 [] 被复用路径短路成假成功
+        with tempfile.TemporaryDirectory() as td:
+            adapter = FakeSearchAdapter(fail_terms=("a",))
+            stats = category.run_category(adapter, ["a"], "us", 100, Path(td))
+            self.assertTrue(stats["all_failed"])
+            self.assertFalse((Path(td) / "fake.json").exists())
+
 
 class TestMain(unittest.TestCase):
     def _chdir_tmp(self):

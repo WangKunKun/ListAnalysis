@@ -87,8 +87,11 @@ def run_category(adapter, terms, country, limit, data_dir, refresh=False) -> dic
             by_id[tid]["details"] = detail
         merged = _sort_samples(merged)
 
-    apps_path.write_text(json.dumps(merged, ensure_ascii=False, indent=2),
-                         encoding="utf-8")
+    # 全部失败时不落盘:避免空 [] 被复用路径短路成假成功,便于下次自然重试
+    # (meta 仍由 main 写入,记录失败诊断)
+    if samples_by_term:
+        apps_path.write_text(json.dumps(merged, ensure_ascii=False, indent=2),
+                             encoding="utf-8")
     return {
         "platform": platform,
         "app_count": len(merged),
