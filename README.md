@@ -32,6 +32,8 @@ Play 首次使用：`npm install`（需 node；运行时需代理可访问 play.
     /cat-scan 个性化二维码生成 light
     # 从品类报告生成自包含 PRD（交给任意 AI 编码工具依次实现）
     /cat-prd pdf-scanner cross buyout
+    # 从 PRD 生成 UI 设计规范与 Stitch prompts（Stitch MCP 可用时自动生成）
+    /cat-ui qr-code-generator
     # 只抓品类样本数据（不分析）
     python3 -m fetch.category --terms "pdf scanner,ocr scan" --slug pdf-scanner --platform all
 
