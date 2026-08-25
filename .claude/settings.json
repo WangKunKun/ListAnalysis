@@ -1,0 +1,6 @@
+{
+  "env": {
+    "HTTPS_PROXY": "http://127.0.0.1:7890",
+    "NO_PROXY": "api.z.ai,.z.ai,bigmodel.cn,.bigmodel.cn,localhost,127.0.0.1"
+  }
+}
