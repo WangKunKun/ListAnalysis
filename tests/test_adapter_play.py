@@ -51,6 +51,18 @@ class TestNormalize(unittest.TestCase):
         self.assertEqual(d["price"], "USD 4.99")
 
 
+class TestNormalizeSearch(unittest.TestCase):
+    def test_normalize_search(self):
+        raw = json.loads((FIXTURES / "play_search.json").read_text(encoding="utf-8"))
+        apps = play.normalize_search(raw)
+        self.assertEqual(len(apps), 2)
+        self.assertEqual(apps[0], {
+            "track_id": "com.adobe.scan.android",
+            "name": "Adobe Scan AI PDF Scanner, OCR",
+            "artist": "Adobe",
+        })
+
+
 class TestPlayAdapter(unittest.TestCase):
     def _bridge(self, result):
         """返回一个 fake bridge_fn：忽略 payload，返回固定结果。"""
@@ -132,6 +144,36 @@ class TestPlayAdapter(unittest.TestCase):
             with self.assertRaises(SystemExit) as cm:
                 play.check_dependency()
             self.assertEqual(cm.exception.code, 2)
+
+    def test_search_apps_maps_and_normalizes(self):
+        raw = json.loads((FIXTURES / "play_search.json").read_text(encoding="utf-8"))
+        bridge = self._bridge(raw)
+        a = play.PlayAdapter(runner=mock.MagicMock())
+        apps = a.search_apps("pdf scanner", "us", 100,
+                             sleep=mock.MagicMock(), bridge_fn=bridge)
+        self.assertEqual(len(apps), 2)
+        self.assertEqual(apps[0]["track_id"], "com.adobe.scan.android")
+        payload = bridge.calls[0]
+        self.assertEqual(payload["cmd"], "search")
+        self.assertEqual(payload["term"], "pdf scanner")
+        self.assertEqual(payload["num"], 100)
+        self.assertEqual(payload["country"], "us")
+        self.assertEqual(payload["lang"], "en")
+
+    def test_search_apps_all_fail_returns_none(self):
+        def boom(payload, runner=None):
+            raise RuntimeError("net down")
+        a = play.PlayAdapter(runner=mock.MagicMock())
+        self.assertIsNone(a.search_apps("x", "us", 10,
+                                        sleep=mock.MagicMock(), bridge_fn=boom))
+
+    def test_search_apps_timeout_no_retry(self):
+        import subprocess
+        def slow_bridge(payload, runner=None):
+            raise subprocess.TimeoutExpired(cmd="node", timeout=60)
+        a = play.PlayAdapter(runner=mock.MagicMock())
+        self.assertIsNone(a.search_apps("x", "us", 10,
+                                        sleep=mock.MagicMock(), bridge_fn=slow_bridge))
 
 
 if __name__ == "__main__":

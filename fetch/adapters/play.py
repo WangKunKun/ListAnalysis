@@ -93,6 +93,15 @@ def normalize_app(d: dict) -> dict:
     }
 
 
+def normalize_search(raw: list) -> list[dict]:
+    """gplay.search 返回 → 统一样本元素（无详情；详情由 fetch_details 补）。"""
+    return [{
+        "track_id": r.get("appId", ""),
+        "name": r.get("title", ""),
+        "artist": r.get("developer", ""),
+    } for r in raw]
+
+
 class PlayAdapter:
     name = "play"
     request_interval = 3.0
@@ -156,3 +165,27 @@ class PlayAdapter:
                     continue
                 out[app_id] = normalize_app(d)
         return out
+
+    def search_apps(self, term, cc, limit, sleep=time.sleep, bridge_fn=None):
+        bridge = bridge_fn or _run_bridge
+        last_exc = None
+        for attempt in range(1 + RETRY_LIMIT):
+            try:
+                raw = bridge({"cmd": "search", "term": term, "num": limit,
+                              "country": cc, "lang": "en"},
+                             runner=self._runner)
+                if raw is None:
+                    raise RuntimeError("bridge returned None")
+                return normalize_search(raw)
+            except subprocess.TimeoutExpired:
+                print(f"  桥接超时（放弃该词，不重试）: play search {term}", flush=True)
+                return None
+            except KeyError:
+                raise
+            except Exception as exc:
+                last_exc = exc
+                if attempt < RETRY_LIMIT:
+                    sleep(RETRY_DELAY)
+        print(f"  搜索失败（已重试 {RETRY_LIMIT} 次）: play {term} ({last_exc})",
+              flush=True)
+        return None

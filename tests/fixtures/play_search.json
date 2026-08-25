@@ -1,0 +1,6 @@
+[
+  {"appId": "com.adobe.scan.android", "title": "Adobe Scan AI PDF Scanner, OCR",
+   "developer": "Adobe", "score": 4.63, "free": true, "price": 0},
+  {"appId": "com.example.docscan", "title": "DocScan - PDF Scanner",
+   "developer": "Example Ltd", "score": 4.5, "free": true, "price": 0}
+]
