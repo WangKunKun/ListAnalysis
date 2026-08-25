@@ -70,6 +70,9 @@ slug 定位 `reports/*-PRD-{slug}.md`(多份取最新;找不到 → 提示先跑
 
 1. 对既有 PRD(qr-code-generator)真跑 `/cat-ui`,产出 6 节文档,核对:
    每屏有功能 ID 来源、tokens 具体、prompts 含 Style anchor
+   *(2026-08-25 实施时改用 pdf-scanner PRD 做泛化验收——更强的测试:
+   非演示品类,且与演示版对照仍可完成;qr-code-generator 的规范文档
+   已由演示阶段产出)*
 2. 与演示产物对照:结构一致,质量不低于演示版
 3. 智能后端分支:MCP 未配置时正常走手动路径(当前会话即此状态,天然可测);
    MCP 配置后(后续步骤)复跑验证自动生成分支
