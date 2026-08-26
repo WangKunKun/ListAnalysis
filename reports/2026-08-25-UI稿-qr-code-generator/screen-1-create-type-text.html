@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QR Code Generator - Create</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#c3c0ff",
+                    "outline": "#777587",
+                    "on-secondary-fixed": "#141b2b",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c7c4d8",
+                    "on-surface-variant": "#464555",
+                    "on-tertiary-container": "#ffd2be",
+                    "primary-fixed": "#e2dfff",
+                    "on-background": "#151c27",
+                    "surface-container-high": "#e2e8f8",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ffdbcc",
+                    "secondary-container": "#d9dff5",
+                    "on-primary-container": "#dad7ff",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "on-secondary-fixed-variant": "#404758",
+                    "surface-container-highest": "#dce2f3",
+                    "on-tertiary-fixed": "#351000",
+                    "inverse-surface": "#2a313d",
+                    "inverse-primary": "#c3c0ff",
+                    "surface-container": "#e7eefe",
+                    "surface-bright": "#f9f9ff",
+                    "secondary": "#575e70",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#5c6274",
+                    "secondary-fixed": "#dce2f7",
+                    "inverse-on-surface": "#ebf1ff",
+                    "on-surface": "#151c27",
+                    "surface-dim": "#d3daea",
+                    "primary": "#3525cd",
+                    "secondary-fixed-dim": "#c0c6db",
+                    "tertiary": "#7e3000",
+                    "tertiary-container": "#a44100",
+                    "surface-variant": "#dce2f3",
+                    "primary-container": "#4f46e5",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#0f0069",
+                    "surface": "#f9f9ff",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#4d44e3",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f0f3ff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "background": "#f9f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "gutter": "20px",
+                    "container-max": "1200px",
+                    "xl": "40px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "code": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "code": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg": [
+                            "30px",
+                            {
+                                    "lineHeight": "36px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FAFAFC;
+        }
+        /* Hide scrollbar for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAFC] text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopAppBar equivalent for mobile -->
+<header class="flex justify-between items-center px-margin-mobile py-lg sticky top-0 z-50 bg-[#FAFAFC]">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Create</h1>
+<button aria-label="Settings" class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-100">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col px-margin-mobile pb-32">
+<!-- Segmented Control (Horizontal Scroll) -->
+<div class="mb-lg overflow-x-auto no-scrollbar py-sm">
+<div class="flex space-x-sm bg-surface-variant rounded-full p-1 inline-flex w-max">
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">URL</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm bg-primary-container text-on-primary transition-colors shadow-sm">Text</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">WiFi</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Contact</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">SMS</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Phone</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Email</button>
+</div>
+</div>
+<!-- Input Area -->
+<div class="mb-xl">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-sm" for="qr-text">Text</label>
+<div class="relative">
+<textarea class="w-full bg-surface border border-outline-variant rounded-lg p-md font-body-md text-body-md text-on-surface focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 outline-none transition-all resize-none shadow-sm" id="qr-text" placeholder="Enter text here..." rows="4">Hello! Check out this app :)</textarea>
+</div>
+</div>
+<!-- Preview Card -->
+<div class="bg-surface rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-lg flex flex-col items-center justify-center mb-xl border border-transparent">
+<div class="w-48 h-48 bg-white rounded-lg p-2 mb-md shadow-sm border border-outline-variant flex items-center justify-center">
+<img alt="QR Code Preview" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U3J4P0IfxhwfWRfuoMsCKhIPDWWb_q9b9SdULn-NkBlm4xF2BfcqpNSqDFj7p9cILjwQ-yNvgVh02u_1fyTLnNfVZHUD6Lttf50wFYPAsFH7pBMGYVzLYGfUO4vPoA2xzvSiXKIUsbYpuKLL6Z5WiDn1-lESIjkuqZ7qquE46jGBM53GrIiOWam4-y7J3XfgJo4tJGaXBpDgO6lhMrGGguLkmaMXThxQX8IRr-hXDb6zd3xBg09eLxeQ"/>
+</div>
+<p class="font-code text-code text-on-surface-variant text-center">ECC Level M · Version 2</p>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-md mt-auto">
+<button class="flex items-center justify-center gap-sm font-label-sm text-label-sm text-primary-container hover:text-primary transition-colors active:scale-95 duration-100 py-2">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+                Customize Style
+            </button>
+<button class="w-full bg-primary-container text-on-primary font-headline-md text-headline-md py-4 rounded-lg shadow-sm hover:bg-primary transition-colors active:scale-95 duration-100">
+                Export
+            </button>
+</div>
+</main>
+<!-- BottomNavBar JSON implementation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-margin-mobile pb-base pt-xs bg-surface shadow-[0_-4px_12px_rgba(0,0,0,0.05)] rounded-t-xl">
+<!-- Create (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_box</span>
+<span class="font-label-sm text-label-sm mt-1">Create</span>
+</button>
+<!-- Scan (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary hover:bg-surface-container-low rounded-xl transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm mt-1">Scan</span>
+</button>
+<!-- History (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary hover:bg-surface-container-low rounded-xl transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+<span class="font-label-sm text-label-sm mt-1">History</span>
+</button>
+<!-- Settings (Inactive) -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary hover:bg-surface-container-low rounded-xl transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Settings</span>
+</button>
+</nav>
+</body></html>

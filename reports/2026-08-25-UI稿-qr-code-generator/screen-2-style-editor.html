@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Style Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#4F46E5",
+                        "primary-container": "#4f46e5",
+                        "background": "#FAFAFC",
+                        "surface": "#FFFFFF",
+                        "on-surface": "#151c27",
+                        "on-surface-variant": "#464555",
+                        "outline-variant": "#c7c4d8",
+                        "surface-variant": "#F3F4F6",
+                        "surface-container-high": "#F3F4F6",
+                        "surface-container-highest": "#E5E7EB",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "16px",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "container-max": "1200px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "xl": "40px",
+                        "md": "16px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "sans": ["Inter", "sans-serif"],
+                        "code": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAFC; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col md:max-w-md md:mx-auto md:shadow-lg antialiased">
+<!-- Header -->
+<header class="flex justify-between items-center px-margin-mobile py-4 bg-background sticky top-0 z-10 border-b border-surface-variant">
+<div class="w-12"></div> <!-- Spacer -->
+<h1 class="text-[17px] font-semibold text-on-surface">Style Editor</h1>
+<button class="text-[15px] font-medium text-primary hover:opacity-80 transition-opacity w-12 text-right">Done</button>
+</header>
+<main class="flex-grow overflow-y-auto pb-8">
+<!-- QR Preview Area -->
+<section class="p-margin-mobile">
+<div class="bg-surface rounded-xl p-8 shadow-sm border border-surface-variant flex items-center justify-center min-h-[320px]">
+<img alt="Live QR Code Preview" class="w-full max-w-[240px] h-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U3J4P0IfxhwfWRfuoMsCKhIPDWWb_q9b9SdULn-NkBlm4xF2BfcqpNSqDFj7p9cILjwQ-yNvgVh02u_1fyTLnNfVZHUD6Lttf50wFYPAsFH7pBMGYVzLYGfUO4vPoA2xzvSiXKIUsbYpuKLL6Z5WiDn1-lESIjkuqZ7qquE46jGBM53GrIiOWam4-y7J3XfgJo4tJGaXBpDgO6lhMrGGguLkmaMXThxQX8IRr-hXDb6zd3xBg09eLxeQ"/>
+</div>
+<!-- Templates Pill -->
+<div class="flex justify-center mt-6 mb-2">
+<button class="flex items-center gap-2 bg-surface border border-outline-variant rounded-full px-5 py-2 hover:bg-surface-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome_mosaic</span>
+<span class="text-[13px] font-medium text-on-surface">Templates</span>
+</button>
+</div>
+</section>
+<!-- Editor Tabs & Content -->
+<section class="mt-2 bg-surface rounded-t-[24px] shadow-[0px_-4px_16px_rgba(0,0,0,0.03)] min-h-[500px] border-t border-surface-variant">
+<!-- Tab Navigation -->
+<div class="px-margin-mobile pt-6 pb-6">
+<div class="flex bg-surface-container-high rounded-xl p-1 relative">
+<!-- Active Tab Background -->
+<div class="absolute left-1 top-1 bottom-1 w-[calc(25%-2px)] bg-surface rounded-[10px] shadow-sm"></div>
+<button class="flex-1 py-2 relative z-10 text-[13px] font-semibold text-primary">Color</button>
+<button class="flex-1 py-2 relative z-10 text-[13px] font-medium text-on-surface-variant hover:text-on-surface transition-colors">Dots</button>
+<button class="flex-1 py-2 relative z-10 text-[13px] font-medium text-on-surface-variant hover:text-on-surface transition-colors">Eyes</button>
+<button class="flex-1 py-2 relative z-10 text-[13px] font-medium text-on-surface-variant hover:text-on-surface transition-colors">Logo</button>
+</div>
+</div>
+<!-- Tab Content: Color -->
+<div class="px-margin-mobile space-y-8 pb-8">
+<!-- Foreground -->
+<div>
+<h3 class="text-[11px] font-semibold tracking-wider text-on-surface-variant mb-4 uppercase">Foreground</h3>
+<div class="flex space-x-4 overflow-x-auto hide-scrollbar pb-2">
+<button class="w-12 h-12 rounded-full bg-black shrink-0 ring-2 ring-offset-2 ring-primary relative flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]">check</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-primary shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full bg-orange-600 shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full bg-slate-600 shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full bg-fuchsia-500 shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full border border-dashed border-outline-variant flex items-center justify-center shrink-0 hover:border-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<!-- Background -->
+<div>
+<h3 class="text-[11px] font-semibold tracking-wider text-on-surface-variant mb-4 uppercase">Background</h3>
+<div class="flex space-x-4 overflow-x-auto hide-scrollbar pb-2">
+<button class="w-12 h-12 rounded-full bg-white border border-outline-variant shrink-0 ring-2 ring-offset-2 ring-primary relative flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">check</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-slate-100 border border-outline-variant shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full bg-indigo-50 border border-outline-variant shrink-0 hover:scale-105 transition-transform"></button>
+<button class="w-12 h-12 rounded-full border border-dashed border-outline-variant flex items-center justify-center shrink-0 hover:border-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+<!-- Gradient -->
+<div>
+<h3 class="text-[11px] font-semibold tracking-wider text-on-surface-variant mb-4 uppercase flex justify-between items-center">
+                    Gradient
+                    <div class="w-8 h-4 bg-surface-variant rounded-full relative cursor-pointer">
+<div class="w-4 h-4 bg-white rounded-full border border-outline-variant shadow-sm absolute right-0"></div>
+</div>
+</h3>
+<div class="p-4 border border-outline-variant rounded-xl bg-surface">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-primary border-2 border-surface shadow-sm ring-2 ring-primary shrink-0"></button>
+<div class="flex-grow h-2 rounded-full bg-gradient-to-r from-primary to-fuchsia-500"></div>
+<button class="w-10 h-10 rounded-full bg-fuchsia-500 border-2 border-surface shadow-sm ring-1 ring-outline-variant shrink-0"></button>
+</div>
+</div>
+</div>
+<!-- Custom HEX -->
+<div>
+<h3 class="text-[11px] font-semibold tracking-wider text-on-surface-variant mb-4 uppercase">Custom Hex</h3>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="text-on-surface-variant font-code text-[15px]">#</span>
+</div>
+<input class="block w-full pl-8 pr-4 py-3.5 border border-outline-variant rounded-xl bg-surface text-on-surface font-code text-[15px] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-shadow uppercase" placeholder="000000" type="text" value="000000"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

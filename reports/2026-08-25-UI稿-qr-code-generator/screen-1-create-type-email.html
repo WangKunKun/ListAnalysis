@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create QR Code</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#404758",
+                        "secondary-container": "#d9dff5",
+                        "on-surface": "#151c27",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-tint": "#4d44e3",
+                        "surface-bright": "#f9f9ff",
+                        "surface-container-highest": "#dce2f3",
+                        "error-container": "#ffdad6",
+                        "secondary": "#575e70",
+                        "surface-container": "#e7eefe",
+                        "primary-container": "#4f46e5",
+                        "surface-container-high": "#e2e8f8",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-surface-variant": "#464555",
+                        "primary": "#3525cd",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-fixed": "#351000",
+                        "inverse-surface": "#2a313d",
+                        "on-secondary-container": "#5c6274",
+                        "on-error-container": "#93000a",
+                        "outline": "#777587",
+                        "surface-container-low": "#f0f3ff",
+                        "secondary-fixed": "#dce2f7",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-dim": "#d3daea",
+                        "on-background": "#151c27",
+                        "tertiary-container": "#a44100",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#ebf1ff",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary": "#7e3000",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-fixed": "#ffdbcc",
+                        "primary-fixed": "#e2dfff",
+                        "background": "#f9f9ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "inverse-primary": "#c3c0ff",
+                        "surface-variant": "#dce2f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "md": "16px",
+                        "container-max": "1200px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "xl": "40px",
+                        "margin-mobile": "16px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "code": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "code": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FAFAFC; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md text-on-background pb-[88px] min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface-dim shadow-sm z-40 hidden md:block">
+<div class="flex items-center justify-between px-margin-mobile h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-2 text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform p-2 rounded-full cursor-pointer">
+<span class="material-symbols-outlined">qr_code_2</span>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">QuickQR</h1>
+<div class="flex items-center gap-2 text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform p-2 rounded-full cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile pt-md md:pt-xl">
+<!-- Mobile Header (Visible only on md-down as per layout rules, but here acting as page title) -->
+<div class="flex justify-between items-center mb-lg md:hidden">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Create</h1>
+<span class="material-symbols-outlined text-on-surface-variant p-2 cursor-pointer">settings</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-lg hidden md:block">Create</h1>
+<!-- Segmented Control -->
+<div class="overflow-x-auto hide-scrollbar mb-xl -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+<div class="flex gap-2 min-w-max bg-surface-container-high p-1 rounded-full border border-outline-variant/30">
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">URL</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Text</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">WiFi</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Contact</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">SMS</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:bg-surface transition-colors">Phone</button>
+<button class="px-4 py-2 rounded-full font-label-sm text-label-sm bg-primary-container text-on-primary shadow-sm transition-colors">Email</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-xl">
+<!-- Form Area -->
+<section class="flex flex-col gap-md">
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Email address</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all" type="email" value="hello@example.com"/>
+</div>
+<div class="relative">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-xs">Subject</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all" type="text" value="Quick question"/>
+</div>
+</section>
+<!-- Preview Card -->
+<section class="flex flex-col items-center justify-center bg-surface-container-lowest rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-lg border border-outline-variant/20">
+<div class="bg-white p-4 rounded-xl border border-outline-variant/30 mb-md">
+<!-- Placeholder for QR Code, using a simple grid representation for minimalism -->
+<div class="w-48 h-48 bg-surface-container-high grid grid-cols-5 grid-rows-5 gap-1 p-2 rounded-lg">
+<div class="bg-on-surface col-span-2 row-span-2 rounded-sm"></div>
+<div class="bg-on-surface col-start-4 col-span-2 row-span-2 rounded-sm"></div>
+<div class="bg-on-surface col-span-2 row-start-4 row-span-2 rounded-sm"></div>
+<div class="bg-primary-container col-start-3 row-start-3 w-full h-full rounded-full"></div>
+<div class="bg-on-surface-variant col-start-4 row-start-5 rounded-sm"></div>
+</div>
+</div>
+<p class="font-code text-code text-on-surface-variant mb-lg">ECC Level M · Version 3</p>
+<button class="font-label-sm text-label-sm text-primary-container hover:text-primary transition-colors flex items-center gap-1 p-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+                    Customize Style
+                </button>
+</section>
+</div>
+<div class="mt-xl">
+<button class="w-full bg-primary-container hover:bg-[#4338ca] text-on-primary font-label-sm text-label-sm py-4 rounded-[8px] shadow-sm transition-colors active:scale-[0.99]">
+                Export
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-4 bg-surface dark:bg-surface-dim shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-50 md:hidden">
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<div class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined">add_box</span>
+</div>
+<span class="font-label-sm text-label-sm">Create</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<div class="flex flex-col items-center justify-center rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</div>
+<span class="font-label-sm text-label-sm">Scan</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<div class="flex flex-col items-center justify-center rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined">history</span>
+</div>
+<span class="font-label-sm text-label-sm">History</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 transition-transform duration-200 cursor-pointer">
+<div class="flex flex-col items-center justify-center rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<span class="font-label-sm text-label-sm">Settings</span>
+</div>
+</nav>
+</body></html>

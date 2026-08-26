@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>QR Scanner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-container": "#dad7ff",
+                      "surface-container": "#e7eefe",
+                      "inverse-primary": "#c3c0ff",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#4f46e5",
+                      "on-primary-fixed": "#0f0069",
+                      "secondary": "#575e70",
+                      "background": "#f9f9ff",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-surface": "#151c27",
+                      "on-secondary-fixed": "#141b2b",
+                      "surface-variant": "#dce2f3",
+                      "surface-container-low": "#f0f3ff",
+                      "on-secondary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "surface-container-high": "#e2e8f8",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "surface": "#f9f9ff",
+                      "surface-tint": "#4d44e3",
+                      "primary-fixed": "#e2dfff",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c7c4d8",
+                      "outline": "#777587",
+                      "primary": "#3525cd",
+                      "tertiary-container": "#a44100",
+                      "tertiary-fixed": "#ffdbcc",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#dce2f7",
+                      "on-secondary-fixed-variant": "#404758",
+                      "on-secondary-container": "#5c6274",
+                      "on-error": "#ffffff",
+                      "secondary-container": "#d9dff5",
+                      "on-tertiary-fixed": "#351000",
+                      "on-background": "#151c27",
+                      "inverse-surface": "#2a313d",
+                      "tertiary": "#7e3000",
+                      "on-surface-variant": "#464555",
+                      "inverse-on-surface": "#ebf1ff",
+                      "on-tertiary-container": "#ffd2be",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "surface-dim": "#d3daea",
+                      "surface-bright": "#f9f9ff",
+                      "surface-container-highest": "#dce2f3",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "margin-mobile": "16px",
+                      "xl": "40px",
+                      "lg": "24px",
+                      "gutter": "20px",
+                      "container-max": "1200px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "code": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                      "code": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .scan-line {
+            animation: scan 2s infinite linear;
+        }
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        .corner-bracket-tl { border-top: 4px solid #4F46E5; border-left: 4px solid #4F46E5; border-top-left-radius: 16px; }
+        .corner-bracket-tr { border-top: 4px solid #4F46E5; border-right: 4px solid #4F46E5; border-top-right-radius: 16px; }
+        .corner-bracket-bl { border-bottom: 4px solid #4F46E5; border-left: 4px solid #4F46E5; border-bottom-left-radius: 16px; }
+        .corner-bracket-br { border-bottom: 4px solid #4F46E5; border-right: 4px solid #4F46E5; border-bottom-right-radius: 16px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black text-on-primary h-screen w-screen overflow-hidden flex flex-col relative font-body-md text-body-md">
+<!-- Viewfinder Background -->
+<div class="absolute inset-0 z-0 bg-cover bg-center opacity-40" data-alt="A dark, slightly blurred photographic background showing a generic office desk scene with a laptop and a coffee cup. The scene is out of focus, typical of a camera viewfinder before it locks onto a subject. The mood is professional and modern, illuminated by soft ambient office lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC1-Gvp2TXUSaXoUJV5U17PjjoVUqnx7vGj6PvjdP2TBXsZJwsRJ5l9TvWt5MS2daRrrjbIvYnAENJkmqQ8pebt2-oo8DIAnYJKmNd3X15B5P5aie552hyQ4WUpfPtqZWO37_xPAgg7wvLhXN3PZldf3R5eY7KEn468CN9qq0rQKtxl9Ztwjv7MwShgB1rckhf-YCH4YkUK7KY6B6Z0XzsN3EOSYcR3BITgyWmMKV0GiiFnBmNtM5hJPIiMebP24cmPBYo4k3Hrahs')">
+</div>
+<!-- Dark Overlay to emphasize scanner -->
+<div class="absolute inset-0 z-0 bg-black/60 pointer-events-none"></div>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center relative z-10 w-full px-margin-mobile">
+<!-- Header / Instructions -->
+<div class="absolute top-[15%] w-full text-center">
+<h1 class="font-headline-md text-headline-md text-white">Point at a QR code</h1>
+</div>
+<!-- Scanner Frame Container -->
+<div class="relative w-[280px] h-[280px] mt-[-40px]">
+<!-- Brackets -->
+<div class="absolute top-0 left-0 w-12 h-12 corner-bracket-tl"></div>
+<div class="absolute top-0 right-0 w-12 h-12 corner-bracket-tr"></div>
+<div class="absolute bottom-0 left-0 w-12 h-12 corner-bracket-bl"></div>
+<div class="absolute bottom-0 right-0 w-12 h-12 corner-bracket-br"></div>
+<!-- Clear Center (Mask illusion) -->
+<div class="absolute inset-[2px] bg-transparent rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.4)] pointer-events-none"></div>
+<!-- Animated Scan Line -->
+<div class="absolute left-0 w-full h-0.5 bg-primary-container shadow-[0_0_8px_2px_rgba(79,70,229,0.5)] scan-line z-20"></div>
+<!-- Torch Action Button -->
+<button class="absolute -top-12 -right-4 p-3 rounded-full bg-surface-container-highest/20 hover:bg-surface-container-highest/40 backdrop-blur-sm transition-colors text-white active:scale-95">
+<span class="material-symbols-outlined block" data-icon="flashlight_on">flashlight_on</span>
+</button>
+</div>
+<!-- Album Button -->
+<div class="absolute bottom-[120px] left-margin-mobile">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-highest/20 hover:bg-surface-container-highest/40 backdrop-blur-sm transition-colors text-white active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="photo_library">photo_library</span>
+<span class="font-label-sm text-label-sm">Album</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-[calc(12px+env(safe-area-inset-bottom))] bg-surface shadow-sm z-50">
+<!-- Create -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1.5 rounded-xl active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="add_circle">add_circle</span>
+<span class="font-label-sm text-label-sm">Create</span>
+</button>
+<!-- Scan (Active State) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="qr_code_scanner" data-weight="fill" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm">Scan</span>
+</button>
+<!-- History -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1.5 rounded-xl active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="history">history</span>
+<span class="font-label-sm text-label-sm">History</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center justify-center text-secondary hover:bg-surface-container-high transition-all px-4 py-1.5 rounded-xl active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>ScannerPro - History</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#464555",
+                        "on-secondary-fixed": "#141b2b",
+                        "inverse-surface": "#2a313d",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9ff",
+                        "inverse-on-surface": "#ebf1ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-variant": "#dce2f3",
+                        "secondary-fixed": "#dce2f7",
+                        "on-secondary-container": "#5c6274",
+                        "surface": "#f9f9ff",
+                        "primary-container": "#4f46e5",
+                        "secondary-container": "#d9dff5",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-container": "#ffd2be",
+                        "inverse-primary": "#c3c0ff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#dce2f3",
+                        "on-surface": "#151c27",
+                        "primary": "#3525cd",
+                        "on-secondary-fixed-variant": "#404758",
+                        "tertiary-container": "#a44100",
+                        "surface-dim": "#d3daea",
+                        "on-background": "#151c27",
+                        "on-primary-fixed": "#0f0069",
+                        "outline": "#777587",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "surface-container-high": "#e2e8f8",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-low": "#f0f3ff",
+                        "background": "#f9f9ff",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "secondary": "#575e70",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-container": "#e7eefe",
+                        "tertiary": "#7e3000",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#351000"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "xl": "40px",
+                        "container-max": "1200px",
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "base": "4px",
+                        "gutter": "20px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "code": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    },
+                    boxShadow: {
+                        'level-1': '0px 4px 12px rgba(0,0,0,0.05)',
+                        'level-2': '0px 10px 25px rgba(0,0,0,0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FAFAFC; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg pb-24 relative overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-background w-full top-0 shadow-sm flex items-center justify-between px-margin-mobile py-base md:hidden">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">ScannerPro</span>
+</div>
+<button class="text-on-surface-variant dark:text-outline hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<!-- Desktop Top Nav -->
+<header class="hidden md:flex bg-surface dark:bg-background w-full top-0 shadow-sm items-center justify-between px-lg py-sm sticky z-50">
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">ScannerPro</span>
+</div>
+<nav class="flex gap-md ml-xl">
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-body-md text-body-md flex items-center gap-xs" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_box">add_box</span> Create
+                </a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-body-md text-body-md flex items-center gap-xs" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="center_focus_strong">center_focus_strong</span> Scan
+                </a>
+<a class="text-primary font-bold hover:opacity-80 transition-opacity font-body-md text-body-md flex items-center gap-xs border-b-2 border-primary pb-xs" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span> History
+                </a>
+<a class="text-on-surface-variant hover:opacity-80 transition-opacity font-body-md text-body-md flex items-center gap-xs" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span> Settings
+                </a>
+</nav>
+</div>
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<main class="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-lg py-xl flex flex-col gap-lg">
+<!-- Header Section -->
+<div class="flex flex-col gap-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">History</h1>
+<!-- Search & Filter Controls -->
+<div class="flex flex-col md:flex-row gap-md justify-between items-start md:items-center">
+<!-- Search Input -->
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border border-surface-container-high rounded-lg pl-xl pr-md py-sm font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm" placeholder="Search history..." type="text"/>
+</div>
+<!-- Segmented Control -->
+<div class="flex bg-surface-container-highest p-base rounded-lg shadow-sm">
+<button class="bg-surface-container-lowest shadow-sm rounded-md px-md py-xs font-label-sm text-label-sm text-on-surface transition-colors">All</button>
+<button class="px-md py-xs font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors">Favorites</button>
+</div>
+</div>
+</div>
+<!-- Empty State Canvas -->
+<div class="flex-1 flex flex-col items-center justify-center min-h-[442px] bg-surface-container-lowest rounded-xl shadow-level-1 p-xl text-center border border-surface-container-high/50 relative overflow-hidden">
+<!-- Minimal Illustration -->
+<div class="mb-lg relative w-32 h-32 flex items-center justify-center opacity-70">
+<svg class="text-outline-variant stroke-current" fill="none" height="100" viewbox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg">
+<!-- QR Code Outer Corners -->
+<rect height="25" rx="4" stroke-width="3" width="25" x="15" y="15"></rect>
+<rect height="15" rx="2" stroke-width="3" width="15" x="20" y="20"></rect>
+<rect height="25" rx="4" stroke-width="3" width="25" x="60" y="15"></rect>
+<rect height="15" rx="2" stroke-width="3" width="15" x="65" y="20"></rect>
+<rect height="25" rx="4" stroke-width="3" width="25" x="15" y="60"></rect>
+<rect height="15" rx="2" stroke-width="3" width="15" x="20" y="65"></rect>
+<!-- Random Inner Blocks -->
+<rect fill="currentColor" height="10" rx="2" width="10" x="60" y="60"></rect>
+<rect fill="currentColor" height="10" rx="2" width="10" x="75" y="60"></rect>
+<rect fill="currentColor" height="10" rx="2" width="25" x="60" y="75"></rect>
+<circle cx="48" cy="48" fill="currentColor" r="4"></circle>
+<circle cx="48" cy="25" fill="currentColor" r="4"></circle>
+<circle cx="25" cy="48" fill="currentColor" r="4"></circle>
+<!-- Sparkle/Plus Accent -->
+<path d="M85 30 L85 45 M77.5 37.5 L92.5 37.5" stroke="#4F46E5" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-sm">No history yet</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mb-lg">Codes you create are saved here (on-device only)</p>
+<button class="bg-primary-container hover:bg-primary-container/90 text-on-primary rounded-lg px-xl py-sm font-body-md text-body-md font-semibold flex items-center gap-sm transition-colors active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                Create One
+            </button>
+</div>
+<!-- Privacy Footer -->
+<div class="flex items-center justify-center gap-sm text-outline mt-auto pt-md pb-xl">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock">lock</span>
+<span class="font-body-md text-body-md text-sm">All records stay on this device only — nothing is uploaded.</span>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface dark:bg-background shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-2 hover:bg-surface-variant dark:hover:bg-on-surface-variant/10 active:scale-95 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="add_box">add_box</span>
+<span class="font-label-sm text-label-sm mt-1">Create</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-2 hover:bg-surface-variant dark:hover:bg-on-surface-variant/10 active:scale-95 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="center_focus_strong">center_focus_strong</span>
+<span class="font-label-sm text-label-sm mt-1">Scan</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-xl px-4 py-2 active:scale-95 transition-transform duration-200 shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="history" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-label-sm text-label-sm mt-1">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-4 py-2 hover:bg-surface-variant dark:hover:bg-on-surface-variant/10 active:scale-95 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

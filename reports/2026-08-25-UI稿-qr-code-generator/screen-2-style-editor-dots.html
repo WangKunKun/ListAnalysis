@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QR Style Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#151c27",
+                      "on-error-container": "#93000a",
+                      "inverse-primary": "#c3c0ff",
+                      "secondary-container": "#d9dff5",
+                      "surface-dim": "#d3daea",
+                      "tertiary": "#7e3000",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "surface-bright": "#f9f9ff",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "outline": "#777587",
+                      "surface-variant": "#dce2f3",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed": "#0f0069",
+                      "tertiary-fixed": "#ffdbcc",
+                      "tertiary-container": "#a44100",
+                      "on-secondary-fixed": "#141b2b",
+                      "inverse-surface": "#2a313d",
+                      "error": "#ba1a1a",
+                      "primary-fixed": "#e2dfff",
+                      "primary": "#3525cd",
+                      "surface-tint": "#4d44e3",
+                      "outline-variant": "#c7c4d8",
+                      "on-secondary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "background": "#f9f9ff",
+                      "on-surface-variant": "#464555",
+                      "surface-container": "#e7eefe",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface": "#f9f9ff",
+                      "on-tertiary-container": "#ffd2be",
+                      "secondary": "#575e70",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed": "#dce2f7",
+                      "on-secondary-container": "#5c6274",
+                      "on-tertiary-fixed": "#351000",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container-highest": "#dce2f3",
+                      "on-background": "#151c27",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#ebf1ff",
+                      "surface-container-low": "#f0f3ff",
+                      "primary-container": "#4f46e5",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-secondary-fixed-variant": "#404758",
+                      "surface-container-high": "#e2e8f8",
+                      "on-tertiary-fixed-variant": "#7b2f00"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1200px",
+                      "sm": "8px",
+                      "base": "4px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "gutter": "20px",
+                      "xs": "4px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "code": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "code": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-primary-container selection:text-white">
+<!-- Mobile Container -->
+<div class="max-w-md mx-auto h-[884px] flex flex-col bg-background relative overflow-hidden shadow-2xl">
+<!-- Header -->
+<header class="flex items-center justify-between px-margin-mobile py-sm bg-background sticky top-0 z-20">
+<button aria-label="Close Editor" class="p-2 -ml-2 text-on-surface-variant hover:text-on-surface transition-colors rounded-full active:bg-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Style Editor</h1>
+<button class="font-label-sm text-label-sm text-primary-container uppercase tracking-widest hover:opacity-80 transition-opacity p-2 -mr-2">Done</button>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto hide-scrollbar pb-xl flex flex-col">
+<!-- Live Preview Area -->
+<section class="px-margin-mobile py-lg flex flex-col items-center">
+<!-- Surface Card for QR Preview -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] w-64 h-64 flex items-center justify-center p-6 relative overflow-hidden group transition-transform duration-300">
+<img class="w-full h-full object-contain drop-shadow-sm transition-transform duration-500 group-hover:scale-105" data-alt="A pristine, high-contrast black and white digital QR code rendering displayed on a clean, stark white minimalist surface. The lighting is soft and diffused, highlighting the crisp geometric edges of the QR modules without casting harsh shadows, evoking a sense of precision and modern utility in a bright light-mode environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa_iTKP2CAGwwZv8dKmqpr1-LzBqv11P7Y0DAe9J2PGlXZv4ZFoqNHFifoDIuyiJlHV8hk9lnise1b7DCAmMI8C49367Ic26TPSPA_oyrmYe6pJwAMReJfDQLpGj1YEEl1mJSBxRWplS_rnwXo7VrrDqGstTgQg9syS5UIe2536QVbVSYQwtAmv00H-EJhTw98eUF1WOdYK7rYTzfF8xhGvcMbrpzoEhRoBNhMF9vRMLCy-si0MehDpPKvzMjzVSIQpKE8Ih9-3-c"/>
+<!-- Decorative scan line -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-container/10 to-transparent h-1/2 -translate-y-full animate-[scan_3s_ease-in-out_infinite]"></div>
+</div>
+<!-- Templates Action -->
+<button class="mt-xl flex items-center gap-2 bg-surface-container-highest text-on-surface hover:bg-surface-variant transition-colors rounded-full px-5 py-2.5 active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+<span class="font-label-sm text-label-sm">Templates</span>
+</button>
+</section>
+<!-- Segmentation / Tabs -->
+<section class="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-outline-variant/30 pt-sm pb-md">
+<nav aria-label="Style Categories" class="flex px-margin-mobile gap-sm overflow-x-auto hide-scrollbar items-center">
+<button class="px-4 py-2 rounded-full text-secondary hover:bg-surface-variant/50 transition-colors whitespace-nowrap font-label-sm text-label-sm">
+                        Color
+                    </button>
+<!-- Active Tab -->
+<button class="px-4 py-2 rounded-full bg-secondary-container text-on-surface whitespace-nowrap font-label-sm text-label-sm shadow-sm transition-all relative">
+                        Dots
+                    </button>
+<button class="px-4 py-2 rounded-full text-secondary hover:bg-surface-variant/50 transition-colors whitespace-nowrap font-label-sm text-label-sm">
+                        Eyes
+                    </button>
+<button class="px-4 py-2 rounded-full text-secondary hover:bg-surface-variant/50 transition-colors whitespace-nowrap font-label-sm text-label-sm">
+                        Logo
+                    </button>
+</nav>
+</section>
+<!-- Tab Content: Dots Grid -->
+<section class="px-margin-mobile py-lg grid grid-cols-2 sm:grid-cols-3 gap-md">
+<!-- Option 1: Square (Active) -->
+<button aria-label="Square Dots Style, Selected" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-primary-container aspect-square flex flex-col items-center justify-center p-sm group relative overflow-hidden active:scale-95 transition-all duration-200">
+<!-- Mini Fragment Preview -->
+<div class="w-12 h-12 grid grid-cols-3 gap-1 mb-3">
+<div class="bg-on-surface rounded-sm"></div><div class="bg-on-surface rounded-sm"></div><div class="bg-on-surface rounded-sm"></div>
+<div class="bg-on-surface rounded-sm"></div><div class="bg-on-surface rounded-sm opacity-20"></div><div class="bg-on-surface rounded-sm"></div>
+<div class="bg-on-surface rounded-sm"></div><div class="bg-on-surface rounded-sm"></div><div class="bg-on-surface rounded-sm"></div>
+</div>
+<span class="font-label-sm text-label-sm text-primary-container">Square</span>
+<!-- Active Indicator -->
+<div class="absolute top-2 right-2 w-2 h-2 bg-primary-container rounded-full shadow-sm"></div>
+</button>
+<!-- Option 2: Rounded -->
+<button aria-label="Rounded Dots Style" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-outline-variant aspect-square flex flex-col items-center justify-center p-sm group active:scale-95 transition-all duration-200">
+<div class="w-12 h-12 grid grid-cols-3 gap-1.5 mb-3">
+<div class="bg-secondary rounded-md"></div><div class="bg-secondary rounded-md"></div><div class="bg-secondary rounded-md"></div>
+<div class="bg-secondary rounded-md"></div><div class="bg-secondary rounded-md opacity-20"></div><div class="bg-secondary rounded-md"></div>
+<div class="bg-secondary rounded-md"></div><div class="bg-secondary rounded-md"></div><div class="bg-secondary rounded-md"></div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary group-hover:text-on-surface transition-colors">Rounded</span>
+</button>
+<!-- Option 3: Dots -->
+<button aria-label="Circular Dots Style" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-outline-variant aspect-square flex flex-col items-center justify-center p-sm group active:scale-95 transition-all duration-200">
+<div class="w-12 h-12 grid grid-cols-3 gap-2 mb-3 px-1 py-1">
+<div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-full"></div>
+<div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-full opacity-20"></div><div class="bg-secondary rounded-full"></div>
+<div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-full"></div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary group-hover:text-on-surface transition-colors">Dots</span>
+</button>
+<!-- Option 4: Heart -->
+<button aria-label="Heart Dots Style" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-outline-variant aspect-square flex flex-col items-center justify-center p-sm group active:scale-95 transition-all duration-200">
+<div class="w-12 h-12 flex flex-wrap gap-1 items-center justify-center mb-3 text-secondary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-[14px] opacity-20" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary group-hover:text-on-surface transition-colors">Heart</span>
+</button>
+<!-- Option 5: Droplet -->
+<button aria-label="Droplet Dots Style" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-outline-variant aspect-square flex flex-col items-center justify-center p-sm group active:scale-95 transition-all duration-200">
+<div class="w-12 h-12 flex flex-wrap gap-1 items-center justify-center mb-3 text-secondary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary group-hover:text-on-surface transition-colors">Droplet</span>
+</button>
+<!-- Option 6: Geometric -->
+<button aria-label="Geometric Dots Style" class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-2 border-transparent hover:border-outline-variant aspect-square flex flex-col items-center justify-center p-sm group active:scale-95 transition-all duration-200">
+<div class="w-12 h-12 grid grid-cols-2 gap-1 mb-3 rotate-45 scale-75">
+<div class="bg-secondary rounded-sm"></div><div class="bg-secondary rounded-full"></div>
+<div class="bg-secondary rounded-full"></div><div class="bg-secondary rounded-sm"></div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary group-hover:text-on-surface transition-colors">Geometric</span>
+</button>
+</section>
+</main>
+</div>
+<style>
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            50% { transform: translateY(200%); }
+            100% { transform: translateY(-100%); }
+        }
+    </style>
+</body></html>

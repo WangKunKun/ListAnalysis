@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>QR Style Editor - Logo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-variant": "#dce2f3",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "inverse-on-surface": "#ebf1ff",
+                      "surface-container-low": "#f0f3ff",
+                      "inverse-primary": "#c3c0ff",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#7e3000",
+                      "secondary-container": "#d9dff5",
+                      "primary-fixed": "#e2dfff",
+                      "on-surface": "#151c27",
+                      "primary": "#3525cd",
+                      "on-tertiary-container": "#ffd2be",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "outline": "#777587",
+                      "on-surface-variant": "#464555",
+                      "surface-container-highest": "#dce2f3",
+                      "surface": "#f9f9ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#5c6274",
+                      "surface-tint": "#4d44e3",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "on-background": "#151c27",
+                      "background": "#f9f9ff",
+                      "tertiary-container": "#a44100",
+                      "surface-container-high": "#e2e8f8",
+                      "inverse-surface": "#2a313d",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "secondary-fixed": "#dce2f7",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed": "#0f0069",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "on-primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#404758",
+                      "outline-variant": "#c7c4d8",
+                      "on-tertiary-fixed": "#351000",
+                      "on-secondary-fixed": "#141b2b",
+                      "surface-dim": "#d3daea",
+                      "error": "#ba1a1a",
+                      "secondary": "#575e70",
+                      "on-secondary": "#ffffff",
+                      "surface-bright": "#f9f9ff",
+                      "primary-container": "#4f46e5",
+                      "surface-container": "#e7eefe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "lg": "24px",
+                      "xl": "40px",
+                      "md": "16px",
+                      "container-max": "1200px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "gutter": "20px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "code": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "code": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #FAFAFC;
+        }
+        /* Custom scrollbar for horizontal tabs if needed */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen w-full flex flex-col font-body-md antialiased md:hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-margin-mobile h-16 w-full sticky top-0 z-50 bg-background shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary-container transition-colors active:opacity-80 transition-opacity rounded-full">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Style Editor</h1>
+<button class="font-label-sm text-label-sm text-primary font-bold hover:text-primary-container transition-colors active:opacity-80 px-2 py-1 uppercase tracking-wider">
+            Done
+        </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col w-full h-full pb-24 overflow-y-auto">
+<!-- Live Preview Area -->
+<section class="w-full flex flex-col items-center justify-center pt-8 pb-6 px-margin-mobile relative">
+<!-- QR Code Card Wrapper -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-6 mb-6 w-64 h-64 flex items-center justify-center relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+<!-- Simulated QR Code Grid (CSS Pattern) -->
+<div class="w-full h-full relative" style="background-image: radial-gradient(#151c27 2px, transparent 2px); background-size: 12px 12px; background-position: 0 0, 6px 6px;">
+<!-- Top Left Eye -->
+<div class="absolute top-2 left-2 w-14 h-14 border-[5px] border-on-surface rounded-lg flex items-center justify-center">
+<div class="w-6 h-6 bg-on-surface rounded-sm"></div>
+</div>
+<!-- Top Right Eye -->
+<div class="absolute top-2 right-2 w-14 h-14 border-[5px] border-on-surface rounded-lg flex items-center justify-center">
+<div class="w-6 h-6 bg-on-surface rounded-sm"></div>
+</div>
+<!-- Bottom Left Eye -->
+<div class="absolute bottom-2 left-2 w-14 h-14 border-[5px] border-on-surface rounded-lg flex items-center justify-center">
+<div class="w-6 h-6 bg-on-surface rounded-sm"></div>
+</div>
+<!-- Centered Logo Layer -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-surface-container-lowest w-16 h-16 rounded-xl shadow-sm flex items-center justify-center p-2 z-10 border border-outline-variant/30">
+<span class="material-symbols-outlined text-[32px] text-primary" data-icon="link" style="font-variation-settings: 'FILL' 1;">link</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Templates Pill Button -->
+<button class="bg-surface-container-lowest border border-outline-variant/50 rounded-full px-5 py-2 flex items-center gap-2 shadow-sm text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container-low transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard_customize">dashboard_customize</span>
+                Templates
+            </button>
+</section>
+<!-- Segmented Tab Row -->
+<div class="w-full px-margin-mobile mb-xl sticky top-16 z-40 bg-background/90 backdrop-blur-sm py-2">
+<div class="bg-surface-variant/50 rounded-xl p-1 flex justify-between relative hide-scrollbar overflow-x-auto">
+<button class="flex-1 py-2 px-3 rounded-lg font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap text-center transition-colors hover:text-on-surface">Color</button>
+<button class="flex-1 py-2 px-3 rounded-lg font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap text-center transition-colors hover:text-on-surface">Dots</button>
+<button class="flex-1 py-2 px-3 rounded-lg font-label-sm text-label-sm text-on-surface-variant whitespace-nowrap text-center transition-colors hover:text-on-surface">Eyes</button>
+<!-- Active Tab -->
+<button class="flex-1 py-2 px-3 bg-surface-container-lowest rounded-lg font-label-sm text-label-sm text-primary shadow-[0px_2px_8px_rgba(0,0,0,0.05)] whitespace-nowrap text-center font-bold relative transition-colors">
+                    Logo
+                </button>
+</div>
+</div>
+<!-- Editor Content (Logo Tab) -->
+<section class="w-full px-margin-mobile flex-1 flex flex-col gap-lg">
+<!-- Source Options List -->
+<div>
+<h2 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm pl-2">Choose source</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] overflow-hidden flex flex-col">
+<button class="flex items-center w-full p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center mr-4 group-hover:bg-primary-container group-hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="photo_library">photo_library</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface flex-1">Choose from Album</span>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="flex items-center w-full p-4 border-b border-surface-variant/50 hover:bg-surface-container-low transition-colors text-left group relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full"></div>
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-[20px]" data-icon="apps">apps</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface flex-1 font-semibold">Built-in Icons</span>
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="check">check</span>
+</button>
+<button class="flex items-center w-full p-4 hover:bg-surface-container-low transition-colors text-left group">
+<div class="w-8 h-8 rounded-lg bg-error-container/30 text-error flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-[20px]" data-icon="block">block</span>
+</div>
+<span class="font-body-md text-body-md text-error flex-1">Remove Logo</span>
+</button>
+</div>
+</div>
+<!-- Built-in Icons Grid -->
+<div>
+<h2 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-sm pl-2">Built-in Icons</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] p-4">
+<div class="grid grid-cols-3 gap-4">
+<!-- Active Icon -->
+<button class="aspect-square rounded-xl bg-surface-container-low border-2 border-primary flex items-center justify-center text-primary relative">
+<span class="material-symbols-outlined text-[28px]" data-icon="link" style="font-variation-settings: 'FILL' 1;">link</span>
+<div class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-[10px] text-on-primary font-bold" data-icon="check">check</span>
+</div>
+</button>
+<button class="aspect-square rounded-xl bg-surface flex items-center justify-center text-on-surface-variant border border-surface-variant hover:bg-surface-container-low hover:border-primary-container hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="wifi">wifi</span>
+</button>
+<button class="aspect-square rounded-xl bg-surface flex items-center justify-center text-on-surface-variant border border-surface-variant hover:bg-surface-container-low hover:border-primary-container hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="call">call</span>
+</button>
+<button class="aspect-square rounded-xl bg-surface flex items-center justify-center text-on-surface-variant border border-surface-variant hover:bg-surface-container-low hover:border-primary-container hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="mail">mail</span>
+</button>
+<button class="aspect-square rounded-xl bg-surface flex items-center justify-center text-on-surface-variant border border-surface-variant hover:bg-surface-container-low hover:border-primary-container hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="favorite">favorite</span>
+</button>
+<button class="aspect-square rounded-xl bg-surface flex items-center justify-center text-on-surface-variant border border-surface-variant hover:bg-surface-container-low hover:border-primary-container hover:text-primary transition-all">
+<span class="material-symbols-outlined text-[28px]" data-icon="star">star</span>
+</button>
+</div>
+</div>
+<!-- Footer Hint Caption -->
+<div class="mt-4 flex items-start gap-2 px-2">
+<span class="material-symbols-outlined text-[16px] text-outline-variant mt-0.5" data-icon="info">info</span>
+<p class="font-body-md text-[13px] leading-5 text-on-surface-variant">Keep logo within the safe area (30% of code size) to ensure reliable scanning.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<!-- Not rendering bottom nav bar as this is a transactional/focused editor screen -->
+</body></html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Style Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "inverse-on-surface": "#ebf1ff",
+                        "primary": "#3525cd",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-secondary-container": "#5c6274",
+                        "surface-variant": "#dce2f3",
+                        "background": "#f9f9ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-container-highest": "#dce2f3",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-fixed": "#0f0069",
+                        "inverse-surface": "#2a313d",
+                        "on-surface-variant": "#464555",
+                        "tertiary-container": "#a44100",
+                        "surface-tint": "#4d44e3",
+                        "on-background": "#151c27",
+                        "surface-bright": "#f9f9ff",
+                        "outline-variant": "#c7c4d8",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "primary-container": "#4f46e5",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface": "#f9f9ff",
+                        "on-secondary-fixed": "#141b2b",
+                        "outline": "#777587",
+                        "tertiary": "#7e3000",
+                        "on-surface": "#151c27",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary-container": "#d9dff5",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-high": "#e2e8f8",
+                        "surface-container": "#e7eefe",
+                        "secondary-fixed": "#dce2f7",
+                        "on-secondary-fixed-variant": "#404758",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#575e70",
+                        "surface-dim": "#d3daea"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "40px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "gutter": "20px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "code": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAFC; }
+        .preview-area { height: 40vh; min-height: 320px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background h-full flex flex-col antialiased">
+<!-- Top Navigation -->
+<header class="bg-background w-full top-0 sticky flex justify-between items-center px-margin-mobile h-16 w-full max-w-container-max mx-auto z-10">
+<button class="text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 transition-transform flex items-center justify-center p-2 -ml-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface">Style Editor</h1>
+<button class="text-primary font-label-sm text-label-sm px-4 py-2 bg-primary-container/10 rounded-full hover:bg-primary-container/20 transition-colors active:scale-95">
+            Done
+        </button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24">
+<!-- Live Preview Area -->
+<section class="preview-area flex flex-col items-center justify-center relative bg-surface-container-low px-margin-mobile py-lg">
+<div class="bg-surface-container-lowest shadow-[0px_10px_25px_rgba(0,0,0,0.05)] rounded-2xl p-6 mb-md transition-all duration-300 transform scale-100 hover:scale-[1.02]">
+<img class="w-48 h-48 object-contain rounded-lg" data-alt="A clean, minimalist QR code featuring uniquely rounded corner 'eyes' set against a stark white background. The QR pattern is a deep, rich indigo color (#4F46E5), demonstrating a modern, high-tech aesthetic suitable for a premium utility app. The design is crisp, sharp, and highly legible, illuminated evenly by soft, diffused studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAji5nHvlrkni3cxwHcm8B7JkSlWK1n17Bq_7Lug0Rp3On7aBAg8YdVURw8I3-SNdDNf28GXjmXbzmpIb7rncssaBrdPQfjsq4ZzVM_3LPsz4sEsM1Imrr8fGLrf0ch-YtTe0J-ItkYoWtNOPxhhA7z5Ol8s2zyvIsijPpE4HzB5ZJJkc7IZddR_I3tGaH_DIox6UEkb7KEQo5S3mvWa4h6BzzVGTMtbL0sa0qzrP15yLgyj5s1QXExURXSAWwe1MD6HL_NafzUXlA"/>
+</div>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-sm text-label-sm px-6 py-2 rounded-full shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="style">style</span>
+                Templates
+            </button>
+</section>
+<!-- Tabs -->
+<nav class="flex px-margin-mobile border-b border-surface-variant/50 sticky top-16 bg-background/90 backdrop-blur-md z-10">
+<button class="flex-1 py-4 text-center text-on-surface-variant font-body-md text-body-md font-medium hover:text-on-surface transition-colors">Color</button>
+<button class="flex-1 py-4 text-center text-on-surface-variant font-body-md text-body-md font-medium hover:text-on-surface transition-colors">Dots</button>
+<button class="flex-1 py-4 text-center text-primary font-body-md text-body-md font-semibold relative">
+                Eyes
+                <div class="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-primary rounded-t-full"></div>
+</button>
+<button class="flex-1 py-4 text-center text-on-surface-variant font-body-md text-body-md font-medium hover:text-on-surface transition-colors">Logo</button>
+</nav>
+<!-- Editor Options -->
+<section class="px-margin-mobile py-xl max-w-container-max mx-auto">
+<div class="flex overflow-x-auto gap-md pb-md no-scrollbar snap-x">
+<!-- Square -->
+<button class="snap-start min-w-[120px] flex flex-col items-center gap-sm bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-outline-variant/30 transition-all">
+<div class="w-16 h-16 border-[6px] border-on-surface flex items-center justify-center p-1">
+<div class="w-full h-full bg-on-surface"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Square</span>
+</button>
+<!-- Rounded (Active) -->
+<button class="snap-start min-w-[120px] flex flex-col items-center gap-sm bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_10px_25px_rgba(53,37,205,0.1)] border-2 border-primary transition-all relative">
+<div class="absolute -top-2 -right-2 bg-primary text-on-primary rounded-full p-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px] leading-none" data-icon="check">check</span>
+</div>
+<div class="w-16 h-16 border-[6px] border-primary rounded-xl flex items-center justify-center p-1">
+<div class="w-full h-full bg-primary rounded-md"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-medium">Rounded</span>
+</button>
+<!-- Circle -->
+<button class="snap-start min-w-[120px] flex flex-col items-center gap-sm bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-outline-variant/30 transition-all">
+<div class="w-16 h-16 border-[6px] border-on-surface rounded-full flex items-center justify-center p-1">
+<div class="w-full h-full bg-on-surface rounded-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Circle</span>
+</button>
+<!-- Leaf -->
+<button class="snap-start min-w-[120px] flex flex-col items-center gap-sm bg-surface-container-lowest rounded-2xl p-4 shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-transparent hover:border-outline-variant/30 transition-all">
+<div class="w-16 h-16 border-[6px] border-on-surface rounded-tl-full rounded-br-full flex items-center justify-center p-1">
+<div class="w-full h-full bg-on-surface rounded-tl-full rounded-br-full"></div>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Leaf</span>
+</button>
+</div>
+<p class="text-center font-body-md text-body-md text-secondary mt-lg">
+                Applies to all three corner eyes
+            </p>
+</section>
+</main>
+</body></html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QuickQR - Create</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#7e3000",
+                        "inverse-surface": "#2a313d",
+                        "secondary-container": "#d9dff5",
+                        "on-secondary-container": "#5c6274",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-variant": "#dce2f3",
+                        "on-secondary-fixed": "#141b2b",
+                        "tertiary-container": "#a44100",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-tint": "#4d44e3",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed": "#dce2f7",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "surface-bright": "#f9f9ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-tertiary-fixed": "#351000",
+                        "on-primary-container": "#dad7ff",
+                        "surface": "#f9f9ff",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-container-high": "#e2e8f8",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline-variant": "#c7c4d8",
+                        "primary": "#3525cd",
+                        "background": "#f9f9ff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container": "#e7eefe",
+                        "on-surface": "#151c27",
+                        "surface-dim": "#d3daea",
+                        "on-secondary-fixed-variant": "#404758",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "primary-container": "#4f46e5",
+                        "on-error": "#ffffff",
+                        "secondary": "#575e70",
+                        "on-background": "#151c27",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-container-highest": "#dce2f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "sm": "8px",
+                        "container-max": "1200px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "xl": "40px",
+                        "lg": "24px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "code": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "code": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #FAFAFC;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-[100px] font-body-md md:hidden flex flex-col">
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky bg-surface dark:bg-surface-dim shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full max-w-container-max mx-auto z-40">
+<div class="flex items-center gap-sm text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined font-variation-settings-'FILL'-0">qr_code_2</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">QuickQR</span>
+</div>
+<button class="hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 transition-transform p-sm rounded-full text-on-surface-variant dark:text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<main class="flex-grow flex flex-col gap-lg px-margin-mobile py-lg w-full max-w-container-max mx-auto">
+<!-- Title -->
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">Create</h1>
+</div>
+<!-- Segmented Control (Scrollable) -->
+<div class="w-full overflow-x-auto hide-scrollbar -mx-margin-mobile px-margin-mobile">
+<div class="flex items-center gap-sm bg-surface-container-high rounded-full p-xs w-max">
+<button class="px-md py-xs rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm shadow-sm transition-all">URL</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">Text</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">WiFi</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">Contact</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">SMS</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">Phone</button>
+<button class="px-md py-xs rounded-full text-on-surface-variant hover:bg-surface-variant font-label-sm text-label-sm transition-all">Email</button>
+</div>
+</div>
+<!-- Input Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Destination URL</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-sm font-body-md text-on-surface focus:border-primary focus:ring-2 focus:ring-primary-fixed transition-all" placeholder="Enter URL" type="text" value="https://example.com"/>
+</div>
+<!-- QR Code Card -->
+<div class="bg-surface-container-lowest rounded-[16px] p-lg flex flex-col items-center justify-center gap-md shadow-[0_4px_12px_rgba(0,0,0,0.05)] mx-auto w-full max-w-[320px]">
+<div class="w-[200px] h-[200px] bg-white rounded-lg flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U3J4P0IfxhwfWRfuoMsCKhIPDWWb_q9b9SdULn-NkBlm4xF2BfcqpNSqDFj7p9cILjwQ-yNvgVh02u_1fyTLnNfVZHUD6Lttf50wFYPAsFH7pBMGYVzLYGfUO4vPoA2xzvSiXKIUsbYpuKLL6Z5WiDn1-lESIjkuqZ7qquE46jGBM53GrIiOWam4-y7J3XfgJo4tJGaXBpDgO6lhMrGGguLkmaMXThxQX8IRr-hXDb6zd3xBg09eLxeQ"/>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center">ECC Level M · Version 3</p>
+</div>
+<!-- Customize Button -->
+<div class="flex justify-center">
+<button class="flex items-center gap-xs text-primary font-label-sm text-label-sm hover:text-surface-tint active:scale-95 transition-all p-sm rounded-lg hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+                Customize Style
+            </button>
+</div>
+<div class="flex-grow"></div>
+<!-- Export Button -->
+<div class="w-full mt-auto">
+<button class="w-full bg-primary-container text-on-primary rounded-lg py-md flex items-center justify-center gap-sm font-label-sm text-label-sm hover:bg-surface-tint active:scale-[0.98] transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                Export
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-4 bg-surface dark:bg-surface-dim shadow-[0_-4px_12px_rgba(0,0,0,0.05)] z-50">
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-full px-4 py-1 hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined font-variation-settings-'FILL'-1">add_box</span>
+<span class="font-label-sm text-label-sm mt-xs">Create</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 duration-200 px-4 py-1">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="font-label-sm text-label-sm mt-xs">Scan</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 duration-200 px-4 py-1">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-sm text-label-sm mt-xs">History</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-secondary-container hover:text-primary dark:hover:text-primary-fixed transition-colors active:scale-90 duration-200 px-4 py-1">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm mt-xs">Settings</span>
+</button>
+</nav>
+</body></html>

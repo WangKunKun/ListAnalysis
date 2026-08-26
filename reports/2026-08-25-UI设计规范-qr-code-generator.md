@@ -207,9 +207,6 @@ Favorites". List of QR entries: 48px thumbnail, title, small type
 badge, timestamp caption, star icon on favorited items. One entry
 shows left-swipe delete action revealed. Footer caption:
 "All records stay on this device only — nothing is uploaded."
-Empty-state variant at bottom of canvas: illustration placeholder and
-"Codes you create are saved here (on-device only)" with primary
-button "Create One".
 ```
 
 **Screen 5 — Settings:**
@@ -225,6 +222,187 @@ Privacy (Privacy policy link, note "This app never collects your QR
 content"), About (version, crash reporting toggle). No promotional
 graphics anywhere.
 ```
+
+### 5.1 状态变体 prompts(每屏 UI 有变化的状态)
+
+> 与默认态同屏不同状态;每条需重述基础布局(Stitch 无跨屏记忆)。
+> 布局不变仅文字变化的状态不单开(见本节末尾"合并注明")。
+
+**Screen 1 — Create [empty](表单无效/首启):**
+
+```
+{Style anchor} QR code generator "Create" screen, empty/initial state.
+Top: large title "Create" with settings gear top-right. Segmented control
+with 7 content types, URL selected. URL input pre-filled with placeholder
+"https://" only. Center: white preview card showing a LIGHT GRAY
+PLACEHOLDER QR pattern with muted hint text "Enter content to generate a
+QR code" below it (no real code). Bottom primary button "Export" in
+DISABLED state (light gray #E5E7EB background, gray #9CA3AF text).
+Footer tab bar 4 tabs, Create active.
+```
+
+**Screen 1 — Create [low-contrast](F-P0-03 AC3 警告态):**
+
+```
+{Style anchor} QR code generator "Create" screen, warning state. Same
+layout as default: title "Create", 7-type segmented control (URL
+selected), URL input, central white preview card with QR code,
+"Customize Style" text button, Export primary button, 4-tab footer.
+ONE difference: above the preview card an amber warning banner (#D97706)
+with warning icon, text "Low contrast — code may be hard to scan", and a
+small dismiss "×" on the right. The QR preview shows a low-contrast
+light-gray-on-white code.
+```
+
+**Screen 1 — Create [text / wifi / contact / sms / phone / email 表单变体]:**
+
+> 分段控件切换后表单区随类型变化;公共布局(标题/分段控件/预览卡/
+> Customize Style/Export/4 tab)与默认态相同,选中段切换为对应类型,
+> 表单预填示例数据。六条 prompt 仅表单区不同:
+
+```
+{Style anchor} QR code generator "Create" screen, TEXT type selected.
+Same chrome as default (title "Create", gear top-right, 7-type segmented
+control with TEXT selected as indigo pill, preview card with QR code and
+caption "ECC Level M · Version 2", "Customize Style" text button, indigo
+"Export" button, 4-tab footer Create active). Form area: one multi-line
+text area (4 rows tall) with label "Text", pre-filled with
+"Hello! Check out this app :)".
+```
+
+```
+{Style anchor} QR code generator "Create" screen, WIFI type selected.
+Same chrome as default with WIFI selected in the segmented control.
+Form area: three single-line inputs stacked — label "Network name (SSID)"
+filled "CoffeeShop_5G"; label "Password" filled with dots •••••••• and a
+show/hide eye icon at right; label "Security" as a small segmented
+control WPA/WPA2 (selected) / WEP / None.
+```
+
+```
+{Style anchor} QR code generator "Create" screen, CONTACT type selected.
+Same chrome as default with CONTACT selected. Form area: three
+single-line inputs stacked — "Full name" filled "Alex Chen"; "Phone"
+filled "+1 555 0100"; "Email" filled "alex@example.com".
+```
+
+```
+{Style anchor} QR code generator "Create" screen, SMS type selected.
+Same chrome as default with SMS selected. Form area: one single-line
+input "Phone number" filled "+1 555 0123", then one multi-line text area
+(3 rows) "Message" filled "Meet me at the coffee shop at 3?".
+```
+
+```
+{Style anchor} QR code generator "Create" screen, PHONE type selected.
+Same chrome as default with PHONE selected. Form area: a single
+single-line input "Phone number" filled "+1 555 0147" with a numeric
+keypad hint icon.
+```
+
+```
+{Style anchor} QR code generator "Create" screen, EMAIL type selected.
+Same chrome as default with EMAIL selected. Form area: two single-line
+inputs stacked — "Email address" filled "hello@example.com"; "Subject"
+filled "Quick question".
+```
+
+**Screen 2 — Style Editor [dots tab]:**
+
+```
+{Style anchor} QR style editor screen, "Dots" tab active. Same chrome as
+default: top 40% live QR preview on white card, Templates entry pill,
+"Done" top-right. Tab row Color / Dots / Eyes / Logo with DOTS active.
+Content: 2×3 grid of dot shape options — Square, Rounded, Dots, Heart,
+Droplet, Geometric — each cell a mini QR fragment preview in that shape,
+Square selected with indigo border. Calm tool-like layout.
+```
+
+**Screen 2 — Style Editor [eyes tab]:**
+
+```
+{Style anchor} QR style editor screen, "Eyes" tab active. Same chrome:
+top 40% live QR preview, Templates pill, "Done" top-right. Tab row with
+EYES active. Content: horizontal row of 4 corner-eye style options —
+Square, Rounded, Circle, Leaf — each shown as a large QR finder-pattern
+glyph, Rounded selected with indigo border. Caption below: "Applies to
+all three corner eyes". Minimal, tool-like.
+```
+
+**Screen 2 — Style Editor [logo tab]:**
+
+```
+{Style anchor} QR style editor screen, "Logo" tab active. Same chrome:
+top 40% live QR preview with a small centered logo visible inside the
+code, Templates pill, "Done" top-right. Tab row with LOGO active.
+Content: "Choose source" three list rows — "Choose from Album",
+"Built-in Icons", "Remove Logo"; below a small grid of built-in icons
+(link, wifi, phone, mail, heart, star); footer hint caption "Keep logo
+within the safe area (30% of code size)".
+```
+
+**Paywall bottom sheet [paywall](N-06 非阻断,导出时触发):**
+
+```
+{Style anchor} Paywall bottom sheet over a dimmed Create screen (60%
+dark scrim). The sheet: white surface, top radius 20, slides from
+bottom, standard small "×" close icon top-right — nothing else. Content:
+title "Unlock All Styles", three benefit lines with small icons —
+"All 30+ templates", "Art shapes & gradients", "SVG & batch export";
+large price "$6.99 one-time"; full-width indigo primary button "Unlock";
+below a quiet text button "Not now" (44pt tap target). NO countdown, NO
+"today only" badge, no promotional graphics.
+```
+
+**Screen 3 — Scan [scanning](识别前):**
+
+```
+{Style anchor} QR scanner screen, scanning state (no result yet).
+Full-screen dark camera viewfinder. Center: 280×280 scanning frame with
+rounded corners and indigo corner brackets, subtle scan line. Top caption
+"Point at a QR code". Torch icon top-right of frame, "Album" button
+bottom-left. NO result sheet visible — bottom shows only the 4-tab bar
+(Scan active).
+```
+
+**Screen 4 — History [empty]:**
+
+```
+{Style anchor} History screen, empty state. Large title "History". Search
+field and "All / Favorites" segmented control still visible at top.
+Center: simple line-art illustration placeholder (QR code outline with a
+sparkle), muted caption "Codes you create are saved here (on-device
+only)", full-width indigo primary button "Create One". Footer privacy
+caption "All records stay on this device only — nothing is uploaded."
+4-tab bar, History active.
+```
+
+**Screen 4 — History [multiselect](长按多选):**
+
+```
+{Style anchor} History screen, multi-select state. Header title replaced
+by "3 selected" with an "×" cancel icon on the left. Search field
+hidden. List of QR entries: each row with a leading round checkbox
+(3 checked indigo, others empty outline). No swipe actions. Bottom:
+contextual action bar replaces the tab bar — icon buttons "Export" and
+"Delete" (danger red #DC2626) plus "Select all" text link.
+```
+
+**Screen 5 — Settings [unlocked](已付费):**
+
+```
+{Style anchor} Settings screen, after purchase (unlocked state). Same
+grouped list layout: Appearance / Data / Privacy / About groups
+identical to default. Top group card now shows: success green #059669
+checkmark circle icon, title "All features unlocked ∞", and a quiet
+text link "Restore Purchase" — no price, no buy button. Card keeps its
+indigo border, calmer tone. No promotional graphics anywhere.
+```
+
+**合并注明(布局不变,不单开 prompt)**:Screen 1 超长文本时预览卡
+caption 变为"已自动提升纠错等级";Screen 1 Export 按钮点按展开 PNG/SVG
+选项(组件内 popover);Screen 3 暗光时手电按钮高亮提示、右上连续扫码
+开关切换。
 
 ## 6. 交付与衔接
 
