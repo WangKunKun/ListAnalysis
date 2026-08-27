@@ -126,6 +126,7 @@ class TestRun(unittest.TestCase):
             self.assertEqual(meta_disk["platform"], "fake")
             self.assertEqual(meta_disk["app_count"], len(apps))
             self.assertEqual(meta_disk["skipped"], [])
+            self.assertEqual(meta_disk["region_count"], 1)  # 数量,非列表
             self.assertIn("detail_top_n", meta_disk)
 
     def test_detail_top_n_limits_detail_fetch(self):

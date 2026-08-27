@@ -19,6 +19,28 @@ DETAIL_BATCH = 30  # 桥内节流约 300ms/个，30×~0.8s≈24s < 60s 超时余
 DETAIL_INTERVAL = 1.0  # 详情批间隔
 
 
+def _bridge_with_retry(call, describe, sleep, retry_limit=RETRY_LIMIT):
+    """执行一次桥调用并按需重试;超时立即放弃(不重试)。
+
+    call: 无参函数,返回解析结果(内部抛异常表示可重试失败);
+    describe: 失败消息里的定位描述。返回结果或 None。
+    """
+    last_exc = None
+    for attempt in range(1 + retry_limit):
+        try:
+            return call()
+        except subprocess.TimeoutExpired:
+            print(f"  桥接超时（放弃，不重试）: {describe}", flush=True)
+            return None
+        except Exception as exc:
+            last_exc = exc
+            if attempt < retry_limit:
+                sleep(RETRY_DELAY)
+    print(f"  请求失败（已重试 {retry_limit} 次）: {describe} ({last_exc})",
+          flush=True)
+    return None
+
+
 def check_dependency():
     """node 或 npm 依赖缺失时以退出码 2 终止。"""
     if not shutil.which("node"):
@@ -115,28 +137,17 @@ class PlayAdapter:
     def fetch_chart(self, cc, chart, top_n, sleep=time.sleep, bridge_fn=None):
         bridge = bridge_fn or _run_bridge
         collection = CHARTS[chart]  # 循环外取，KeyError 不进重试
-        last_exc = None
-        for attempt in range(1 + RETRY_LIMIT):
-            try:
-                raw = bridge({"cmd": "list", "collection": collection,
-                              "category": CATEGORY_TOOLS, "num": top_n,
-                              "country": cc, "lang": "en"},
-                             runner=self._runner)
-                if raw is None:
-                    raise RuntimeError("bridge returned None")
-                return normalize_top(raw)
-            except subprocess.TimeoutExpired:
-                print(f"  桥接超时（放弃该榜，不重试）: play {cc} {chart}", flush=True)
-                return None
-            except KeyError:
-                raise
-            except Exception as exc:
-                last_exc = exc
-                if attempt < RETRY_LIMIT:
-                    sleep(RETRY_DELAY)
-        print(f"  请求失败（已重试 {RETRY_LIMIT} 次）: play {cc} {chart} ({last_exc})",
-              flush=True)
-        return None
+
+        def call():
+            raw = bridge({"cmd": "list", "collection": collection,
+                          "category": CATEGORY_TOOLS, "num": top_n,
+                          "country": cc, "lang": "en"},
+                         runner=self._runner)
+            if raw is None:
+                raise RuntimeError("bridge returned None")
+            return normalize_top(raw)
+
+        return _bridge_with_retry(call, f"play {cc} {chart}", sleep)
 
     def fetch_details(self, ids, cc, sleep=time.sleep, bridge_fn=None):
         """批量拉详情；按 DETAIL_BATCH 分批，超时批丢弃不炸流程。
@@ -166,6 +177,23 @@ class PlayAdapter:
                 out[app_id] = normalize_app(d)
         return out
 
+    def fetch_reviews(self, app_id, cc, num=100, sleep=time.sleep,
+                      bridge_fn=None):
+        """抓用户评论(桥 reviews 命令,sort=2 最新优先);失败返回 None。
+
+        sleep 参数为兼容签名保留(节流在 fetch.reviews 编排层)。
+        """
+        from fetch.reviews import normalize_play_reviews  # 延迟导入避免环
+        bridge = bridge_fn or _run_bridge
+        try:
+            raw = bridge({"cmd": "reviews", "appId": app_id, "country": cc,
+                          "lang": "en", "num": num, "sort": 2},
+                         runner=self._runner)
+        except subprocess.TimeoutExpired:
+            print(f"  评论抓取超时: play {app_id}", flush=True)
+            return None
+        return normalize_play_reviews(raw)
+
     def search_apps(self, term, cc, limit, sleep=time.sleep, bridge_fn=None):
         """Google Play搜索应用
 
@@ -180,24 +208,13 @@ class PlayAdapter:
             应用列表，失败返回None
         """
         bridge = bridge_fn or _run_bridge
-        last_exc = None
-        for attempt in range(1 + RETRY_LIMIT):
-            try:
-                raw = bridge({"cmd": "search", "term": term, "num": limit,
-                              "country": cc, "lang": "en"},
-                             runner=self._runner)
-                if raw is None:
-                    raise RuntimeError("bridge returned None")
-                return normalize_search(raw)
-            except subprocess.TimeoutExpired:
-                print(f"  桥接超时（放弃该词，不重试）: play search {term}", flush=True)
-                return None
-            except KeyError:
-                raise
-            except Exception as exc:
-                last_exc = exc
-                if attempt < RETRY_LIMIT:
-                    sleep(RETRY_DELAY)
-        print(f"  搜索失败（已重试 {RETRY_LIMIT} 次）: play {term} ({last_exc})",
-              flush=True)
-        return None
+
+        def call():
+            raw = bridge({"cmd": "search", "term": term, "num": limit,
+                          "country": cc, "lang": "en"},
+                         runner=self._runner)
+            if raw is None:
+                raise RuntimeError("bridge returned None")
+            return normalize_search(raw)
+
+        return _bridge_with_retry(call, f"play search {term}", sleep)

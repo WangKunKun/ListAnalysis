@@ -149,7 +149,7 @@ def run(adapter, config, data_dir, refresh=False, sleep=time.sleep) -> dict:
         "top_n": config["top_n"],
         "detail_top_n": detail_top_n,
         "app_count": len(ordered),
-        "region_count": config["regions"],
+        "region_count": len(config["regions"]),
         "skipped": skipped,
         "all_failed": len(chart_results) == 0,
     }

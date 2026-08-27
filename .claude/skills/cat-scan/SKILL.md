@@ -35,29 +35,14 @@ standard(默认,头部 10 个抓评论);--refresh(强制重抓)。
      收款机;PDF 工具里的阅读器/签名器按目标品类判断去留)。
    - 过滤后样本 < 5 → 告知用户样本过少、给出建议关键词,停止。
    - 头部排序:上榜优先(榜单位置),未上榜按评分量/下载量。standard 模式
-     取头部 10 个抓评论:
-     - ios:优先 WebFetch 抓
-       `https://itunes.apple.com/us/rss/customerreviews/id={track_id}/sortBy=mostRecent/page=1/json`
-       提炼好评/差评主题;WebFetch 被域安全拦截时改用
-       `curl -s <同 URL>` 抓 JSON 自行提炼;两者都失败标注"信息有限"。
-     - play:Bash 写临时脚本 `/tmp/play_reviews.mjs`(内容如下,一字不差)执行后
-       删除,cwd 必须为项目根;需代理时命令前加
-       `PLAY_PROXY=http://127.0.0.1:7890`:
-
-       ```js
-       import { createRequire } from "node:module";
-       const require = createRequire(process.cwd() + "/");
-       const gplay = require('google-play-scraper').default;
-       const proxy = process.env.PLAY_PROXY || process.env.HTTPS_PROXY || '';
-       const ro = proxy ? { agent: { https: new (require('hpagent').HttpsProxyAgent)({ proxy }) } } : {};
-       gplay.reviews({ appId: process.argv[2], lang: 'en', country: 'us', sort: 2, num: 100, requestOptions: ro })
-         .then(r => r.data.forEach(c => console.log(`${c.score}★ | ${(c.text || '').slice(0, 200)}`)))
-         .catch(e => { console.error(e.message); process.exit(1); });
-       ```
-
-       注意:脚本在 /tmp 但依赖项目的 node_modules,故须用 `createRequire(process.cwd() + "/")`
-       解析(.mjs 里裸用 require 会 ReferenceError);运行 `node /tmp/play_reviews.mjs {track_id}`,
-       据输出提炼好评/差评主题。
+     取头部 10 个抓评论,双平台统一走评论管线(落盘缓存):
+     `python3 -m fetch.reviews --platform {ios|play} --ids {头部 app 的 id,逗号分隔}`
+     (工作目录项目根;play 需代理 `PLAY_PROXY=http://127.0.0.1:7890`;
+     已落盘自动跳过),读 `data/{日期}/reviews/{platform}/{id}.json`
+     (数组 [{score,text}])提炼好评/差评主题。
+     - iOS 注意:Apple 评论 RSS 已普遍返回空(端点废弃中)——空文件即
+       "该源无评论",标注"iOS 评论信息有限,痛点基于描述与低分共性推断",
+       不要重抓。
      - 评论抓取失败的 app 标"信息有限",不中断。
 5. **写报告**到 `reports/{日期}-品类分析-{slug}.md`(结构见下),完整样本表
    直接写进报告第 7 节。最后向用户输出 3-5 句执行摘要(竞争格局一句话 +
@@ -78,7 +63,11 @@ standard(默认,头部 10 个抓评论);--refresh(强制重抓)。
    - **差异化方向归组**(有效区隔:方向 × 代表产品 × 描述原文证据)
 5. **用户痛点**:差评主题提炼,每条附证据(评论摘录+出现频率+来自哪款 app),
    区分双平台痛点异同;light 模式此节基于低分 app 共性与描述推断,标注可信度较低
-6. **机会点**:3-6 条产品切入建议(痛点 × 竞争空白交叉推导)
+6. **机会点**:3-6 条产品切入建议(痛点 × 竞争空白交叉推导),每条含:
+   机会评级(高/中/低——AI 综合定性评估并附理由)、规模证据(只引用数据
+   文件已有数字:样本数/平均评分/评分量/下载量)、技术难度(高/中/低+一句
+   理由)、与现有品类的差异化。禁止臆造数值评分(如 8.5/10):定量只用
+   数据文件数字,其余为定性判断并标注"AI 定性评估"
 7. **完整样本表**:过滤后全部 app 一览
 
 ## 约束

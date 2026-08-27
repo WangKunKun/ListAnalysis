@@ -1,0 +1,6 @@
+{"feed": {"entry": [
+  {"im:rating": {"label": "5"}, "title": {"label": "Great"},
+   "content": {"label": "Works perfectly for scanning docs"}},
+  {"im:rating": {"label": "2"}, "title": {"label": "Too many ads"},
+   "content": {"label": "Subscription pushed everywhere"}}
+]}}

@@ -14,6 +14,10 @@ CHART_KEYS = {
     "grossing": "topgrossingapplications",
 }
 
+REVIEWS_URL = ("https://itunes.apple.com/{cc}/rss/customerreviews/"
+               "id={tid}/sortBy=mostRecent/page={page}/json")
+REVIEWS_MAX_PAGES = 2  # 每页约 50 条,2 页对痛点提炼已足够
+
 REQUEST_INTERVAL = 3.0
 RETRY_LIMIT = 2
 RETRY_DELAY = 5.0
@@ -120,6 +124,25 @@ class IosAdapter:
             out.update(parse_lookup(text))
         return out
 
+    def fetch_reviews(self, track_id, cc, num=100, sleep=time.sleep):
+        """抓用户评论(按最新排序,分页至 num 条或空页);首页失败返回 None。"""
+        from fetch.reviews import parse_ios_reviews  # 延迟导入避免环
+        out, page = [], 1
+        while len(out) < num and page <= REVIEWS_MAX_PAGES:
+            if out:
+                sleep(REQUEST_INTERVAL)
+            text = http_get(
+                REVIEWS_URL.format(cc=cc, tid=track_id, page=page),
+                opener=self._opener, sleep=sleep)
+            if text is None:
+                return None if not out else out
+            batch = parse_ios_reviews(text)
+            if not batch:
+                break  # 空页:该 app 评论已取尽
+            out += batch
+            page += 1
+        return out[:num]
+
     def search_apps(self, term, cc, limit, sleep=time.sleep):
         """关键词搜索品类样本。Search API 响应与 lookup 同构，
         复用 parse_lookup 解析，详情一次到位（无需再调 lookup）。
@@ -140,31 +163,3 @@ class IosAdapter:
         details = parse_lookup(text)
         return [{"track_id": tid, "name": d["name"], "artist": d["developer"],
                  "details": d} for tid, d in details.items()]
-
-    def parse_search(text: str) -> list[dict]:
-        """解析iTunes搜索响应
-
-        Args:
-            text: API响应文本
-
-        Returns:
-            应用列表
-        """
-        data = json.loads(text)
-        results = []
-        for app in data.get("results", []):
-            results.append({
-                "track_id": str(app.get("trackId", "")),
-                "name": app.get("trackName", ""),
-                "artist": app.get("sellerName", ""),
-                "details": {
-                    "description": app.get("description", ""),
-                    "price": app.get("formattedPrice", ""),
-                    "rating": app.get("averageUserRating"),
-                    "rating_count": app.get("userRatingCount", 0),
-                    "genres": app.get("genres", []),
-                    "release_date": app.get("currentVersionReleaseDate", ""),
-                    "track_view_url": app.get("trackViewUrl", "")
-                }
-            })
-        return results

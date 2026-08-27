@@ -40,13 +40,13 @@
 /app-scan standard
 
 # 2. 从推荐结果选择品类进行深度分析
-/category-analysis "PDF扫描工具"
+/cat-scan "PDF扫描工具"
 
 # 3. 基于品类分析生成PRD
 /cat-prd pdf-scanner --platform ios --mode buyout
 
 # 4. 基于PRD生成UI设计规范
-/generate-stitch-ui pdf-scanner
+/cat-ui pdf-scanner
 ```
 
 ### 单独使用各功能
@@ -67,8 +67,8 @@
 #### 品类分析
 ```bash
 # 任意品类双平台竞品与痛点分析
-/category-analysis "PDF扫描工具"
-/category-analysis "二维码生成器" light
+/cat-scan "PDF扫描工具"
+/cat-scan "二维码生成器" light
 ```
 
 #### PRD生成
@@ -81,7 +81,7 @@
 #### UI设计生成
 ```bash
 # 从 PRD 生成 UI 设计规范与 Stitch prompts
-/generate-stitch-ui pdf-scanner
+/cat-ui pdf-scanner
 ```
 
 ### 只抓数据不分析
@@ -92,6 +92,9 @@ python3 -m fetch.charts --platform ios|play|all [--date YYYY-MM-DD] [--refresh]
 
 # 品类数据抓取
 python3 -m fetch.category --terms "pdf scanner,ocr scan" --slug pdf-scanner --platform all
+
+# 用户评论抓取(落盘缓存到 data/{日期}/reviews/)
+python3 -m fetch.reviews --platform play --ids com.example.app [--num 100]
 ```
 
 Play 首次使用：`npm install`（需 node；运行时需代理可访问 play.google.com）。
@@ -143,7 +146,7 @@ scripts/install_launchd.sh uninstall [ios|play]
 ### 代码目录
 - `fetch/`：抓取框架（core 编排 + adapters 平台适配器）
 - `scripts/play_bridge.mjs`：Play 数据源桥（google-play-scraper）
-- `.claude/skills/`：Claude Code技能定义（app-scan、category-analysis、cat-prd、generate-stitch-ui）
+- `.claude/skills/`：Claude Code技能定义（app-scan、cat-scan、cat-prd、cat-ui）
 - `tests/`：单元测试和fixtures
 
 ### 文档目录
