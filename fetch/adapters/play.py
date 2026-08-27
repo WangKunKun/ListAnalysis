@@ -167,6 +167,18 @@ class PlayAdapter:
         return out
 
     def search_apps(self, term, cc, limit, sleep=time.sleep, bridge_fn=None):
+        """Google Play搜索应用
+
+        Args:
+            term: 搜索关键词(英文)
+            cc: 国家代码
+            limit: 返回数量上限
+            sleep: 休眠函数
+            bridge_fn: 桥接函数(可注入用于测试)
+
+        Returns:
+            应用列表，失败返回None
+        """
         bridge = bridge_fn or _run_bridge
         last_exc = None
         for attempt in range(1 + RETRY_LIMIT):
@@ -176,7 +188,25 @@ class PlayAdapter:
                              runner=self._runner)
                 if raw is None:
                     raise RuntimeError("bridge returned None")
-                return normalize_search(raw)
+                # 获取应用ID列表
+                app_ids = normalize_search(raw)
+                if not app_ids:
+                    return []
+                # 批量获取详情
+                app_ids_list = [app["track_id"] for app in app_ids]
+                details = self.fetch_details(app_ids_list, cc, sleep, bridge_fn)
+                # 合并详情到搜索结果
+                results = []
+                for app in app_ids:
+                    track_id = app["track_id"]
+                    if track_id in details:
+                        results.append({
+                            "track_id": track_id,
+                            "name": app["name"],
+                            "artist": app["artist"],
+                            "details": details[track_id]
+                        })
+                return results
             except subprocess.TimeoutExpired:
                 print(f"  桥接超时（放弃该词，不重试）: play search {term}", flush=True)
                 return None

@@ -53,7 +53,11 @@ async function main() {
     process.stdout.write(JSON.stringify(out));
   } else if (cmd === "search") {
     const results = await gplay.search({ ...opts, requestOptions: requestOpts });
-    process.stdout.write(JSON.stringify(results));
+    // 返回appId列表
+    process.stdout.write(JSON.stringify({
+      success: true,
+      results: results.map(app => app.appId)
+    }));
   } else {
     console.error(`未知指令: ${cmd}`);
     process.exit(1);

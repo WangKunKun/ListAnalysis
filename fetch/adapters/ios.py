@@ -122,7 +122,17 @@ class IosAdapter:
 
     def search_apps(self, term, cc, limit, sleep=time.sleep):
         """关键词搜索品类样本。Search API 响应与 lookup 同构，
-        复用 parse_lookup 解析，详情一次到位（无需再调 lookup）。"""
+        复用 parse_lookup 解析，详情一次到位（无需再调 lookup）。
+
+        Args:
+            term: 搜索关键词(英文)
+            cc: 国家代码
+            limit: 返回数量上限(API上限200)
+            sleep: 休眠函数(可注入用于测试)
+
+        Returns:
+            应用列表，失败返回None
+        """
         url = SEARCH_URL.format(term=quote(term), cc=cc, limit=limit)
         text = http_get(url, opener=self._opener, sleep=sleep)
         if text is None:
@@ -130,3 +140,31 @@ class IosAdapter:
         details = parse_lookup(text)
         return [{"track_id": tid, "name": d["name"], "artist": d["developer"],
                  "details": d} for tid, d in details.items()]
+
+    def parse_search(text: str) -> list[dict]:
+        """解析iTunes搜索响应
+
+        Args:
+            text: API响应文本
+
+        Returns:
+            应用列表
+        """
+        data = json.loads(text)
+        results = []
+        for app in data.get("results", []):
+            results.append({
+                "track_id": str(app.get("trackId", "")),
+                "name": app.get("trackName", ""),
+                "artist": app.get("sellerName", ""),
+                "details": {
+                    "description": app.get("description", ""),
+                    "price": app.get("formattedPrice", ""),
+                    "rating": app.get("averageUserRating"),
+                    "rating_count": app.get("userRatingCount", 0),
+                    "genres": app.get("genres", []),
+                    "release_date": app.get("currentVersionReleaseDate", ""),
+                    "track_view_url": app.get("trackViewUrl", "")
+                }
+            })
+        return results
