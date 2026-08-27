@@ -188,25 +188,7 @@ class PlayAdapter:
                              runner=self._runner)
                 if raw is None:
                     raise RuntimeError("bridge returned None")
-                # 获取应用ID列表
-                app_ids = normalize_search(raw)
-                if not app_ids:
-                    return []
-                # 批量获取详情
-                app_ids_list = [app["track_id"] for app in app_ids]
-                details = self.fetch_details(app_ids_list, cc, sleep, bridge_fn)
-                # 合并详情到搜索结果
-                results = []
-                for app in app_ids:
-                    track_id = app["track_id"]
-                    if track_id in details:
-                        results.append({
-                            "track_id": track_id,
-                            "name": app["name"],
-                            "artist": app["artist"],
-                            "details": details[track_id]
-                        })
-                return results
+                return normalize_search(raw)
             except subprocess.TimeoutExpired:
                 print(f"  桥接超时（放弃该词，不重试）: play search {term}", flush=True)
                 return None
